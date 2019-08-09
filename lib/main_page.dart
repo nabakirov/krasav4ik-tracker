@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> {
   String wsUrl = 'ws://ropsten.fridayte.ch:5001';
   EthereumAddress contractAddress = EthereumAddress.fromHex('0xb012241f80f77a728b144a50be2c3f8135bd7ca8');
   String userPrivateKey;
-  // String userPrivateKey = '9857c0274f686e96653680cd176efa3001ef670567cc65ff91862e966d40ba19';
+  String mnemonic;
   Credentials userCredentials;
   Client httpClient;
   Web3Client ethClient;
