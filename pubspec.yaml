@@ -20,9 +20,11 @@ dependencies:
   flutter:
     sdk: flutter
   web3dart: ^1.1.1
-  path_provider: ^1.2.0
   web_socket_channel: ^1.0.14
   flutter_secure_storage: ^3.2.1+1
+  flutter_bloc: ^0.20.0
+  meta: ^1.1.6
+  equatable: ^0.2.0
   
 
   # The following adds the Cupertino Icons font to your application.

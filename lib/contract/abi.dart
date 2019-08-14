@@ -1,4 +1,4 @@
-final abiJsonString =
+final contractJson =
 """[
 	{
 		"constant": false,
