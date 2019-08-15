@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:krasav4ik/bloc/bloc.dart';
 import 'package:krasav4ik/contract/abi.dart' as prefix0;
+import 'package:krasav4ik/pages/home_page.dart';
 import 'package:krasav4ik/pages/loader.dart';
 import 'package:krasav4ik/pages/login_page.dart';
 import 'package:krasav4ik/pages/logo.dart';
@@ -17,9 +18,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: ThemeData(
-      //   brightness: Brightness.light
-      // ),
+      theme: ThemeData(
+        primaryColor: Colors.white
+      ),
       title: 'krasav4ik',
       home: BlocProvider(
         builder: (context) => AppBloc(
@@ -51,8 +52,9 @@ class Home extends StatelessWidget {
     if (state is LoginInitialState) {
       return LoginPage();
     }
-    return Center(
-      child: Text('init')
-    );
+    if (state is HomePageInitialState) {
+      return HomePage();
+    }
+    return LogoPage();
   }
 }
