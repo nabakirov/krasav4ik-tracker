@@ -55,7 +55,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     } 
     
     else if (event is LoginBtnPressed) {
-      yield LoadingState();
       var privateKey = event.privateKey;
       try {
         credentials = await web3client.credentialsFromPrivateKey(privateKey);
@@ -67,7 +66,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     } 
     
     else if (event is LoggedOut) {
-      yield LoadingState();
       await secureStorage.delete(key: _secureStorageKey);
       yield LoginInitialState();
     }

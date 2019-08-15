@@ -42,7 +42,6 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     var appBloc = BlocProvider.of<AppBloc>(context);
     final state = appBloc.currentState;
-    print(state.toString());
     if (state is AppStartedState) {
       appBloc.dispatch(AppStarted());
     }
