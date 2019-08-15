@@ -7,8 +7,9 @@ import 'package:krasav4ik/bloc/bloc.dart';
 class ActionWidgets extends StatelessWidget {
   final _privateKeyController = TextEditingController();
   final AppBloc appBloc;
+  final MessageBloc messageBloc;
 
-  ActionWidgets({@required this.appBloc});
+  ActionWidgets({@required this.appBloc, @required this.messageBloc});
   void _paste() async {
     var data = await Clipboard.getData('text/plain');
     _privateKeyController.text = data.text;
@@ -50,10 +51,13 @@ class ActionWidgets extends StatelessWidget {
           child: Text('login'),
           onPressed: () {
             String key = _privateKeyController.text;
-            if (key == null) {
-              key = '';
+            print(key);
+            if (key.isEmpty) {
+              messageBloc.dispatch(ErrorMessage(message: 'private key is empty'));
+              return null;
+            } else {
+              return appBloc.dispatch(LoginBtnPressed(privateKey: key));
             }
-            return appBloc.dispatch(LoginBtnPressed(privateKey: key));
           },
         ),
       ],
@@ -65,6 +69,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appBloc = BlocProvider.of<AppBloc>(context);
+    var messageBloc = BlocProvider.of<MessageBloc>(context);
     return Scaffold(
         body: Padding(
             padding: EdgeInsets.fromLTRB(50, 180, 50, 100),
@@ -72,7 +77,7 @@ class LoginPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[Logo(), ActionWidgets(appBloc: appBloc)],
+              children: <Widget>[Logo(), ActionWidgets(appBloc: appBloc, messageBloc: messageBloc,)],
             )));
   }
 }
