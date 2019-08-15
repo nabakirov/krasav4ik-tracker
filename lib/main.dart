@@ -85,7 +85,7 @@ class Home extends StatelessWidget {
     if (state is LoginInitialState) {
       return LoginPage();
     }
-    if (state is HomeState) {
+    if (state is HomePageInitialState) {
       return HomePage();
     }
     if (state is LoginFailureState) {

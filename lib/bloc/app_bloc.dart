@@ -43,11 +43,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   Stream<AppState> mapEventToState(
     AppEvent event,
   ) async* {
+
     if (event is AppStarted) {
       await init();
       String token = await secureStorage.read(key: _secureStorageKey);
       if (token != null) {
-        yield HomeState();
+        yield HomePageInitialState();
       } else {
         yield LoginInitialState();
       }
@@ -58,7 +59,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       try {
         credentials = await web3client.credentialsFromPrivateKey(privateKey);
         await secureStorage.write(key: _secureStorageKey, value: privateKey);
-        yield HomeState();
+        yield HomePageInitialState();
       } catch (_) {
         yield LoginFailureState();
       }
