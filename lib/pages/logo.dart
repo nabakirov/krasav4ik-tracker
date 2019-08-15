@@ -12,7 +12,10 @@ class Logo extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 35,
             )),
-        Text('Tracker', style: TextStyle(fontSize: 20),)
+        Text(
+          'Tracker',
+          style: TextStyle(fontSize: 20),
+        )
       ],
     );
   }
@@ -21,11 +24,12 @@ class Logo extends StatelessWidget {
 class LogoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return 
-        Container(
-            alignment: Alignment.center,
-            child: Center(
-              child: Logo(),
-            ));
+    return Scaffold(
+      body: Container(
+          alignment: Alignment.center,
+          child: Center(
+            child: Logo(),
+          )),
+    );
   }
 }
