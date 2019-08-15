@@ -26,7 +26,7 @@ class LoginFailureState extends AppState {
   String toString() => "LoginFailureState";
 }
 
-class HomePageInitialState extends AppState {
+class HomeState extends AppState {
   @override
-  String toString() => "HomePageInitialState";
+  String toString() => "HomeState";
 }
