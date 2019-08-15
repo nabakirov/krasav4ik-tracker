@@ -18,29 +18,63 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.white
-      ),
-      title: 'krasav4ik',
-      home: BlocProvider(
-        builder: (context) => AppBloc(
-          contractAddressHex: contractAddressHex,
-          contractJson: prefix0.contractJson,
-          rpcUrl: rpcUrl,
-          wsUrl: wsUrl
-          ),
-        child: BlocBuilder<AppBloc, AppState>(
-          builder: (context, state) => Home(),
-        ),
+        theme: ThemeData(primaryColor: Colors.white),
+        title: 'krasav4ik',
+        home: BlocProvider(
+          builder: (context) => MessageBloc(),
+          child: Stack(children: <Widget>[
+            BlocProvider(
+                builder: (context) => AppBloc(
+                    contractAddressHex: contractAddressHex,
+                    contractJson: prefix0.contractJson,
+                    rpcUrl: rpcUrl,
+                    wsUrl: wsUrl),
+                child: BlocBuilder<AppBloc, AppState>(
+                  builder: (context, state) => Home(),
+                )),
+            BlocBuilder<MessageBloc, MessageState>(
+              builder: (context, state) => Message(),
+            )
+          ]),
+        ));
+  }
+}
+
+class Message extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var messageBloc = BlocProvider.of<MessageBloc>(context);
+    var state = messageBloc.currentState;
+    if (state is InitialMessageState) {
+      return Container();
+    }
+    Color backgroundColor;
+    if (state is ErrorMessageState) {
+      backgroundColor = Colors.red;
+    } else if (state is WarningMessageState) {
+      backgroundColor = Colors.green;
+    }
+    return SafeArea(
+      child: Material(
+        child: Container(
+            height: 40,
+            color: backgroundColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: messageBloc.data
+            )),
       ),
     );
   }
 }
 
 class Home extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     var appBloc = BlocProvider.of<AppBloc>(context);
+    var messageBloc = BlocProvider.of<MessageBloc>(context);
     final state = appBloc.currentState;
     if (state is AppStartedState) {
       appBloc.dispatch(AppStarted());
@@ -53,6 +87,10 @@ class Home extends StatelessWidget {
     }
     if (state is HomeState) {
       return HomePage();
+    }
+    if (state is LoginFailureState) {
+      messageBloc.dispatch(ErrorMessage(message: 'invalid private key'));
+      return LoginPage();
     }
     return LogoPage();
   }
