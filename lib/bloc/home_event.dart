@@ -5,3 +5,9 @@ import 'package:meta/meta.dart';
 abstract class HomeEvent extends Equatable {
   HomeEvent([List props = const <dynamic>[]]) : super(props);
 }
+
+class Update extends HomeEvent {}
+
+class Plus extends HomeEvent {}
+
+class Minus extends HomeEvent {}
