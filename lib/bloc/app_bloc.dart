@@ -48,6 +48,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       await init();
       String token = await secureStorage.read(key: _secureStorageKey);
       if (token != null) {
+        credentials = await web3client.credentialsFromPrivateKey(token);
         yield HomePageInitialState();
       } else {
         yield LoginInitialState();
