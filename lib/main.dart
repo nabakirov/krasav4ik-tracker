@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:krasav4ik/bloc/bloc.dart';
+import 'package:krasav4ik/bloc_delegate.dart';
 import 'package:krasav4ik/contract/abi.dart' as prefix0;
 import 'package:krasav4ik/pages/home_page.dart';
 import 'package:krasav4ik/pages/loader.dart';
 import 'package:krasav4ik/pages/login_page.dart';
 import 'package:krasav4ik/pages/logo.dart';
+import 'package:bloc/bloc.dart';
 
 void main() {
+  BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(App());
 }
 
@@ -18,6 +21,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        // routes: ,
         theme: ThemeData(primaryColor: Colors.white),
         title: 'krasav4ik',
         home: BlocProvider(

@@ -7,3 +7,6 @@ export 'message_state.dart';
 export 'home_bloc.dart';
 export 'home_event.dart';
 export 'home_state.dart';
+export 'bottom_bar_bloc.dart';
+export 'bottom_bar_event.dart';
+export 'bottom_bar_state.dart';
