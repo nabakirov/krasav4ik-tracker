@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:meta/meta.dart';
+import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 import './bloc.dart';
@@ -20,13 +21,18 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   String contractJson;
 
 
-  AppBloc(
-      {@required this.rpcUrl,
-      @required this.wsUrl,
-      @required this.contractAddressHex,
-      @required this.contractJson});
+  AppBloc({
+    this.rpcUrl,
+    this.wsUrl,
+    this.contractAddressHex,
+    this.contractJson
+  });
 
-  Future init() async {
+  @override
+  AppState get initialState => AppLoadingState();
+
+
+  Future _init() async {
     web3client = new Web3Client(rpcUrl, Client(), socketConnector: () {
       return IOWebSocketChannel.connect(wsUrl).cast<String>();
     });
@@ -36,41 +42,44 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     secureStorage = new FlutterSecureStorage();
   }
 
-  @override
-  AppState get initialState => AppStartedState();
 
   @override
   Stream<AppState> mapEventToState(
     AppEvent event,
   ) async* {
-
-    if (event is AppStarted) {
-      await init();
-      String token = await secureStorage.read(key: _secureStorageKey);
-      if (token != null) {
-        credentials = await web3client.credentialsFromPrivateKey(token);
-        yield HomePageInitialState();
-      } else {
-        yield LoginInitialState();
-      }
-    } 
-    
-    else if (event is LoginBtnPressed) {
-      var privateKey = event.privateKey;
-      try {
-        credentials = await web3client.credentialsFromPrivateKey(privateKey);
-        await secureStorage.write(key: _secureStorageKey, value: privateKey);
-        yield HomePageInitialState();
-      } catch (_) {
-        yield LoginFailureState();
-      }
-    } 
-    
-    else if (event is LoggedOut) {
-      await secureStorage.delete(key: _secureStorageKey);
-      yield LoginInitialState();
+    if (event is InitializeApp) {
+      yield* _mapInitializeAppToState();
+    } else if (event is LoginPress) {
+      yield* _mapLoginPressToState(event);
+    } else if (event is LogoutPress) {
+      yield* _mapLogoutPressToState();
     }
   }
 
+  Stream<AppState> _mapInitializeAppToState() async* {
+    await _init();
+    final privateKey = await secureStorage.read(key: _secureStorageKey);
+    if (privateKey != null) {
+      credentials = await web3client.credentialsFromPrivateKey(privateKey);
+      yield HomePageState();
+    } else {
+      yield LoginPageState(failed: false);
+    }
+  }
+  
+  Stream<AppState> _mapLoginPressToState(LoginPress event) async* {
+    var privateKey = event.privateKey;
+      try {
+        credentials = await web3client.credentialsFromPrivateKey(privateKey);
+        await secureStorage.write(key: _secureStorageKey, value: privateKey);
+        yield HomePageState();
+      } catch (_) {
+        yield LoginPageState(failed: true);
+      }
+  }
 
+  Stream<AppState> _mapLogoutPressToState() async* {
+      await secureStorage.delete(key: _secureStorageKey);
+      yield LoginPageState(failed: false);
+  }
 }
