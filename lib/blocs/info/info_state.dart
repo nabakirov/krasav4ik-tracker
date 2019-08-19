@@ -6,4 +6,14 @@ abstract class InfoState extends Equatable {
   InfoState([List props = const <dynamic>[]]) : super(props);
 }
 
-class InitialInfoState extends InfoState {}
+class BaseInfoState extends InfoState {
+  String nickname = 'no nickname';
+  double balance = 0;
+  int pointCount = 0;
+  int maxPointCount = 0;
+  int achieveCount = 0;
+  double achievePrize = 0;
+
+  @override 
+  String toString() => 'InitialInfoState';
+}

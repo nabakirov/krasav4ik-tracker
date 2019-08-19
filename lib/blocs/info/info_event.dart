@@ -5,3 +5,9 @@ import 'package:meta/meta.dart';
 abstract class InfoEvent extends Equatable {
   InfoEvent([List props = const <dynamic>[]]) : super(props);
 }
+
+
+class UpdateInfo extends InfoEvent {
+  @override
+  String toString() => 'UpdateInfo';
+}
