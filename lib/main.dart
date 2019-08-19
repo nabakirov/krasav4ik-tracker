@@ -6,6 +6,7 @@ import 'package:krasav4ik/blocs/blocs.dart';
 import 'package:krasav4ik/blocs/logging_bloc_delegate.dart';
 import 'package:krasav4ik/configs.dart' as config;
 import 'package:krasav4ik/tools/tools.dart';
+import 'package:krasav4ik/screens/screen.dart';
 
 void main() {
   BlocSupervisor.delegate = LoggingBlocDelegate();
@@ -31,7 +32,6 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appBloc = BlocProvider.of<AppBloc>(context);
-    var notificationBloc = BlocProvider.of<NotificationBloc>(context);
 
     return MaterialApp(
       title: 'krasav4ik',
@@ -42,16 +42,23 @@ class App extends StatelessWidget {
               appBloc.dispatch(InitializeApp());
               return Loader();
             } else if (state is LoginPageState) {
-              return Text('login');
+              return LoginScreen();
             } else if (state is HomePageState) {
-              return Scaffold(
-                appBar: AppBar(title: Text('home')),
-                body: Center(
-                  child: RaisedButton(
-                    child: Text('notification error'),
-                    onPressed: () =>
-                        notificationBloc.dispatch(NewError('new error')),
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<HomeBloc>(
+                    builder: (context) => HomeBloc(),
                   ),
+                  BlocProvider<InfoBloc>(
+                    builder: (context) => InfoBloc()
+                  ),
+                  BlocProvider<SettingsBloc>(
+                    builder: (context) => SettingsBloc(),
+                  )
+                ],
+                child: 
+                BlocBuilder<HomeBloc, HomeState>(
+                  builder: (context, state) => Home(),
                 ),
               );
             }
