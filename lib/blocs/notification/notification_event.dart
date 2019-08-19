@@ -19,7 +19,12 @@ class NewMessage extends NotificationEvent {
   final String message;
 
   NewMessage(this.message) : super([message]);
-  
+
   @override
   String toString() => "NewMessage";
+}
+
+class HideNotificationBar extends NotificationEvent {
+  @override
+  String toString() => 'HideNotificationBar';
 }

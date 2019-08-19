@@ -18,7 +18,7 @@ class NotificationWidget extends StatelessWidget {
     return SafeArea(
       child: Material(
         child: Container(
-            height: 40,
+            height: 50,
             color: backgroundColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
