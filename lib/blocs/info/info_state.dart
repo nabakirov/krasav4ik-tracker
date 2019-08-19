@@ -7,13 +7,37 @@ abstract class InfoState extends Equatable {
 }
 
 class BaseInfoState extends InfoState {
-  String nickname = 'no nickname';
-  double balance = 0;
-  int pointCount = 0;
-  int maxPointCount = 0;
-  int achieveCount = 0;
-  double achievePrize = 0;
+  final String nickname;
+  final double balance;
+  final int pointCount;
+  final int maxPointCount;
+  final int achieveCount;
+  final double achievePrize;
 
-  @override 
+  BaseInfoState(
+      {this.nickname,
+      this.balance,
+      this.pointCount,
+      this.maxPointCount,
+      this.achieveCount,
+      this.achievePrize})
+      : super([
+          nickname,
+          balance,
+          pointCount,
+          maxPointCount,
+          achieveCount,
+          achievePrize
+        ]);
+
+  @override
   String toString() => 'InitialInfoState';
+}
+
+class CreatedInfoState extends InfoState {
+  @override
+  String toString() => 'CreatedInfoState';
+
+  final String txnHash;
+  CreatedInfoState({@required this.txnHash}) : super([txnHash]);
 }

@@ -11,3 +11,13 @@ class UpdateInfo extends InfoEvent {
   @override
   String toString() => 'UpdateInfo';
 }
+
+class PlusPointPress extends InfoEvent {
+  @override
+  String toString() => 'PlusPointPress';
+}
+
+class MinusPointPress extends InfoEvent {
+  @override
+  String toString() => 'MinusPointPress';
+}
