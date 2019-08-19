@@ -35,6 +35,7 @@ class App extends StatelessWidget {
 
     return MaterialApp(
       title: 'krasav4ik',
+      theme: ThemeData(primaryColor: Colors.white),
       home: Stack(children: [
         BlocBuilder<AppBloc, AppState>(
           builder: (context, state) {
