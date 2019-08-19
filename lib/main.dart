@@ -9,24 +9,22 @@ import 'package:krasav4ik/tools/tools.dart';
 
 void main() {
   BlocSupervisor.delegate = LoggingBlocDelegate();
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider<AppBloc>(
-          builder: (context) => AppBloc(
-            rpcUrl: config.rpcUrl,
-            wsUrl: config.wsUrl,
-            contractAddressHex: config.contractAddressHex,
-            contractJson: abi.contractJson,
-          ),
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<AppBloc>(
+        builder: (context) => AppBloc(
+          rpcUrl: config.rpcUrl,
+          wsUrl: config.wsUrl,
+          contractAddressHex: config.contractAddressHex,
+          contractJson: abi.contractJson,
         ),
-        BlocProvider<NotificationBloc>(
-          builder: (context) => NotificationBloc(),
-        )
-      ],
-      child: App(),
-    )
-  );
+      ),
+      BlocProvider<NotificationBloc>(
+        builder: (context) => NotificationBloc(),
+      )
+    ],
+    child: App(),
+  ));
 }
 
 class App extends StatelessWidget {
@@ -34,20 +32,35 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     var appBloc = BlocProvider.of<AppBloc>(context);
     var notificationBloc = BlocProvider.of<NotificationBloc>(context);
+
     return MaterialApp(
       title: 'krasav4ik',
-      home: BlocBuilder<AppBloc, AppState>(
-        builder: (context, state) {
-          if (state is AppLoadingState) {
-            appBloc.dispatch(InitializeApp());
-            return Loader();
-          } else if (state is LoginPageState) {
-            return Text('login');
-          } else if (state is HomePageState) {
-            return Text('Home');
-          }
-        },
-      ),
+      home: Stack(children: [
+        BlocBuilder<AppBloc, AppState>(
+          builder: (context, state) {
+            if (state is AppLoadingState) {
+              appBloc.dispatch(InitializeApp());
+              return Loader();
+            } else if (state is LoginPageState) {
+              return Text('login');
+            } else if (state is HomePageState) {
+              return Scaffold(
+                appBar: AppBar(title: Text('home')),
+                body: Center(
+                  child: RaisedButton(
+                    child: Text('notification error'),
+                    onPressed: () =>
+                        notificationBloc.dispatch(NewError('new error')),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+        BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, state) => NotificationWidget()
+        )
+      ]),
     );
   }
 }
