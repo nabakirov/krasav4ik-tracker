@@ -10,10 +10,16 @@ class NotificationWidget extends StatelessWidget {
       return Container();
     }
     Color backgroundColor;
+    String message;
     if (state is ErrorState) {
       backgroundColor = Colors.red;
+      message = state.message;
     } else if (state is MessageState) {
       backgroundColor = Colors.green;
+      message = state.message;
+    } else if (state is TxnState) {
+      backgroundColor = Colors.green;
+      message = state.txnHash;
     }
     return SafeArea(
       child: Material(
@@ -25,7 +31,7 @@ class NotificationWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Text(state.message)
+                Text(message)
               ],
             )),
       ),

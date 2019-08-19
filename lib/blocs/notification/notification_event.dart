@@ -28,3 +28,13 @@ class HideNotificationBar extends NotificationEvent {
   @override
   String toString() => 'HideNotificationBar';
 }
+
+class ShowTransactionHash extends NotificationEvent {
+  @override
+  String toString() => 'ShowTransactionHash';
+
+  final String txnHash;
+
+  ShowTransactionHash({@required this.txnHash})
+      : super([txnHash]);
+}
