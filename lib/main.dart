@@ -5,8 +5,7 @@ import 'package:krasav4ik/abi.dart' as abi;
 import 'package:krasav4ik/blocs/blocs.dart';
 import 'package:krasav4ik/blocs/logging_bloc_delegate.dart';
 import 'package:krasav4ik/configs.dart' as config;
-import 'package:krasav4ik/screens/loader.dart';
-import 'package:krasav4ik/screens/notification.dart';
+import 'package:krasav4ik/tools/tools.dart';
 
 void main() {
   BlocSupervisor.delegate = LoggingBlocDelegate();
