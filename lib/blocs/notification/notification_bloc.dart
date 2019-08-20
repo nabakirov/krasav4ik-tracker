@@ -19,7 +19,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     } else if (event is HideNotificationBar) {
       yield EmptyState();
     } else if (event is ShowTransactionHash) {
-      yield TxnState(txnHash: event.txnHash);
+      yield* _stateWithSelfDestroy(notificationState: TxnState(txnHash: event.txnHash), duration: 5);
     }
   }
 

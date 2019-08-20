@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:krasav4ik/blocs/blocs.dart';
+import 'package:krasav4ik/configs.dart' as config;
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationWidget extends StatelessWidget {
   Widget _build(BuildContext context) {
@@ -10,17 +12,23 @@ class NotificationWidget extends StatelessWidget {
       return Container();
     }
     Color backgroundColor;
-    String message;
+    List<Widget> children;
+    Function onTap;
     if (state is ErrorState) {
       backgroundColor = Colors.red;
-      message = state.message;
+      children = [Text(state.message)];
+      onTap() => {};
     } else if (state is MessageState) {
       backgroundColor = Colors.green;
-      message = state.message;
+      children = [Text(state.message)];
+      onTap() => {};
     } else if (state is TxnState) {
+
+      children = [txnCard(state.txnHash)];
+      
       backgroundColor = Colors.green;
-      message = state.txnHash;
-    }
+      onTap() => launch('${config.etherscan}$state.txnHash');
+    } 
     return SafeArea(
       child: Material(
         child: Container(
@@ -30,10 +38,10 @@ class NotificationWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Text(message)
-              ],
-            )),
+              children: children
+            )
+
+        ),
       ),
     );
   }
@@ -42,5 +50,14 @@ class NotificationWidget extends StatelessWidget {
     return BlocBuilder<NotificationBloc, NotificationState>(
       builder: (context, state) {return _build(context);},
     );
+  }
+
+  Widget txnCard(String txnHash) {
+    return InkWell(
+
+        child: Container(child:Text('view on etherscan', style: TextStyle(color: Colors.white))),
+        onTap: () => launch('${config.etherscan}$txnHash'),
+      );
+    
   }
 }
