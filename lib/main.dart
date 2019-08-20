@@ -32,7 +32,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appBloc = BlocProvider.of<AppBloc>(context);
-
+    var notificationBloc = BlocProvider.of<NotificationBloc>(context);
     return MaterialApp(
       title: 'krasav4ik',
       theme: ThemeData(primaryColor: Colors.white),
@@ -51,7 +51,12 @@ class App extends StatelessWidget {
                     builder: (context) => HomeBloc(),
                   ),
                   BlocProvider<InfoBloc>(
-                    builder: (context) => InfoBloc()
+                    builder: (context) => InfoBloc(
+                      web3client: appBloc.web3client,
+                      credentials: appBloc.credentials,
+                      contract: appBloc.contract,
+                      notificationBloc: notificationBloc
+                    )..dispatch(UpdateInfo())
                   ),
                   BlocProvider<SettingsBloc>(
                     builder: (context) => SettingsBloc(),
@@ -62,6 +67,8 @@ class App extends StatelessWidget {
                   builder: (context, state) => Home(),
                 ),
               );
+            } else {
+              return Material(child: Center(child: Text('unknown state'),),);
             }
           },
         ),

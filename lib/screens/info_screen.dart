@@ -7,13 +7,8 @@ class InfoScreen extends StatelessWidget {
   InfoBloc infoBloc;
   @override
   Widget build(BuildContext context) {
-    var notificationBloc = BlocProvider.of<NotificationBloc>(context);
     infoBloc = BlocProvider.of<InfoBloc>(context);
-    var state = infoBloc.currentState;
-    if (state is CreatedInfoState) {
-      notificationBloc.dispatch(ShowTransactionHash(txnHash: state.txnHash));
-    } 
-    return _build(state);
+    return _build(infoBloc.currentState);
 
   }
 
@@ -59,6 +54,9 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget _etherBalanceBuilder(double balance) {
+    if (balance  == null) {
+      balance = 0;
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -72,6 +70,9 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget nicknameWidget(String nickname) {
+    if (nickname  == null) {
+      nickname = 'no nickname';
+    }
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -90,6 +91,12 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget pointCountWidget(int pointCount, int maxPointCount) {
+    if (pointCount == null) {
+      pointCount = 0;
+    }
+    if (maxPointCount == null) {
+      maxPointCount = 0;
+    }
     var data = Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
@@ -105,6 +112,9 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget achieveCountWidget(int achieveCount) {
+    if (achieveCount == null) {
+      achieveCount = 0;
+    }
     return _infoRowBuilder(
         _titleBuilder('achieves'),
         Text(achieveCount.toString(),
@@ -112,6 +122,9 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget contractInfoWidget(double achivePrize) {
+    if (achivePrize == null) {
+      achivePrize = 0;
+    }
     return _infoRowBuilder(
         _titleBuilder('achieve prize'), _etherBalanceBuilder(achivePrize));
   }
