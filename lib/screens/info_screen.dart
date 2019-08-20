@@ -8,7 +8,10 @@ class InfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     infoBloc = BlocProvider.of<InfoBloc>(context);
-    return _build(infoBloc.currentState);
+    return Padding(
+      child: _build(infoBloc.currentState),
+      padding: EdgeInsets.all(20),
+    );
 
   }
 
@@ -23,6 +26,7 @@ class InfoScreen extends StatelessWidget {
         pointCountWidget(state.pointCount, state.maxPointCount),
         achieveCountWidget(state.achieveCount),
         contractInfoWidget(state.achievePrize),
+        actionButtonWidget(),
         FlatButton(
           child: Text('update'),
           onPressed: () {
@@ -33,9 +37,23 @@ class InfoScreen extends StatelessWidget {
     );
   }
 
-  // Widget _actionButtons() {
-
-  // }
+  Widget actionButtonWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () => infoBloc.dispatch(MinusPointPress()),
+          child: Text('-'),
+          color: Colors.red
+        ),
+        RaisedButton(
+          onPressed: () => infoBloc.dispatch(PlusPointPress()),
+          child: Text('+'),
+          color: Colors.green
+        ),
+      ],
+    );
+  }
 
   Widget _infoRowBuilder(Widget title, Widget data) {
     return Row(
