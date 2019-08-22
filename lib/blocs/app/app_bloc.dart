@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:meta/meta.dart';
 import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';

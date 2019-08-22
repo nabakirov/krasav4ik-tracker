@@ -47,32 +47,46 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   ) async* {
     if (event is InfoInitialize) {
       yield await _update();
-      _updateSubscription = Stream.periodic(Duration(seconds: 5)).listen((dynamic) {
+      _updateSubscription =
+          Stream.periodic(Duration(seconds: 5)).listen((dynamic) {
         dispatch(UpdateInfo());
       });
-    }
-    else if (event is UpdateInfo) {
+    } else if (event is UpdateInfo) {
       yield await _update();
     } else if (event is PlusPointPress) {
-      var txnHash = await _plusPointPress();
-      notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+      try {
+        var txnHash = await _plusPointPress();
+        notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+      } catch (_) {
+        notificationBloc.dispatch(NewError('something went wrong'));
+      }
       yield await _update();
     } else if (event is MinusPointPress) {
-      var txnHash = await _minusPointPress();
-      notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+      try {
+        var txnHash = await _minusPointPress();
+        notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+      } catch (_) {
+        notificationBloc.dispatch(NewError('something went wrong'));
+      }
       yield await _update();
     }
   }
 
   Future<String> _plusPointPress() async {
-    String transactionHash = await web3client.sendTransaction(credentials, 
-    Transaction.callContract(contract: contract, function: contractPlus, parameters: []), fetchChainIdFromNetworkId: true);
+    String transactionHash = await web3client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+            contract: contract, function: contractPlus, parameters: []),
+        fetchChainIdFromNetworkId: true);
     return transactionHash;
   }
 
   Future<String> _minusPointPress() async {
-    String transactionHash = await web3client.sendTransaction(credentials, 
-    Transaction.callContract(contract: contract, function: contractMinus, parameters: []), fetchChainIdFromNetworkId: true);
+    String transactionHash = await web3client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+            contract: contract, function: contractMinus, parameters: []),
+        fetchChainIdFromNetworkId: true);
     return transactionHash;
   }
 
@@ -80,22 +94,20 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     if (address == null) {
       address = await credentials.extractAddress();
     }
-    var userData = await web3client
-        .call(contract: contract, function: contractEmployees, params: [address]);
+    var userData = await web3client.call(
+        contract: contract, function: contractEmployees, params: [address]);
     var maxPointCaunt = await web3client
         .call(contract: contract, function: contractMaxPointCount, params: []);
     var achievePrize = await web3client
         .call(contract: contract, function: contractAchievePrize, params: []);
-    var balance =
-        await web3client.getBalance(address);
+    var balance = await web3client.getBalance(address);
 
     return BaseInfoState(
-      balance: balance.getValueInUnit(EtherUnit.ether),
-      pointCount: userData[1].toInt(),
-      nickname: userData[2].toString(),
-      achieveCount: userData[4].toInt(),
-      achievePrize: achievePrize[0].toDouble() / pow(10, 18),
-      maxPointCount: maxPointCaunt[0].toInt()
-    );
+        balance: balance.getValueInUnit(EtherUnit.ether),
+        pointCount: userData[1].toInt(),
+        nickname: userData[2].toString(),
+        achieveCount: userData[4].toInt(),
+        achievePrize: achievePrize[0].toDouble() / pow(10, 18),
+        maxPointCount: maxPointCaunt[0].toInt());
   }
 }

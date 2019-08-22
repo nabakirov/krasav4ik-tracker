@@ -13,51 +13,46 @@ class NotificationWidget extends StatelessWidget {
     }
     Color backgroundColor;
     List<Widget> children;
-    Function onTap;
     if (state is ErrorState) {
       backgroundColor = Colors.red;
       children = [Text(state.message)];
-      onTap() => {};
     } else if (state is MessageState) {
       backgroundColor = Colors.green;
       children = [Text(state.message)];
-      onTap() => {};
     } else if (state is TxnState) {
-
       children = [txnCard(state.txnHash)];
-      
+
       backgroundColor = Colors.green;
-      onTap() => launch('${config.etherscan}$state.txnHash');
-    } 
+    }
     return SafeArea(
       child: Material(
         child: Container(
             height: 50,
             color: backgroundColor,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: children
-            )
-
-        ),
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: children)),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NotificationBloc, NotificationState>(
-      builder: (context, state) {return _build(context);},
+      builder: (context, state) {
+        return _build(context);
+      },
     );
   }
 
   Widget txnCard(String txnHash) {
     return InkWell(
-
-        child: Container(child:Text('view on etherscan', style: TextStyle(color: Colors.white))),
-        onTap: () => launch('${config.etherscan}$txnHash'),
-      );
-    
+      child: Container(
+          child:
+              Text('view on etherscan', style: TextStyle(color: Colors.white))),
+      onTap: () => launch('${config.etherscan}$txnHash'),
+    );
   }
 }
