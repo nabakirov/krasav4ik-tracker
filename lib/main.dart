@@ -59,7 +59,12 @@ class App extends StatelessWidget {
                     )..dispatch(InfoInitialize())
                   ),
                   BlocProvider<SettingsBloc>(
-                    builder: (context) => SettingsBloc(),
+                    builder: (context) => SettingsBloc(
+                      web3client: appBloc.web3client,
+                      credentials: appBloc.credentials,
+                      contract: appBloc.contract,
+                      notificationBloc: notificationBloc
+                    )..dispatch(PullSettingsEvent()),
                   )
                 ],
                 child: 
