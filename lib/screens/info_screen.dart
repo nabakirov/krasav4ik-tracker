@@ -27,12 +27,6 @@ class InfoScreen extends StatelessWidget {
         achieveCountWidget(state.achieveCount),
         contractInfoWidget(state.achievePrize),
         actionButtonWidget(),
-        FlatButton(
-          child: Text('update'),
-          onPressed: () {
-            infoBloc.dispatch(UpdateInfo());
-          },
-        )
       ],
     );
   }

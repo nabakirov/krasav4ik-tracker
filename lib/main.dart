@@ -56,7 +56,7 @@ class App extends StatelessWidget {
                       credentials: appBloc.credentials,
                       contract: appBloc.contract,
                       notificationBloc: notificationBloc
-                    )..dispatch(UpdateInfo())
+                    )..dispatch(InfoInitialize())
                   ),
                   BlocProvider<SettingsBloc>(
                     builder: (context) => SettingsBloc(),

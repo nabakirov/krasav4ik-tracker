@@ -16,6 +16,7 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   ContractFunction contractPlus;
   ContractFunction contractMinus;
   EthereumAddress address;
+  StreamSubscription _updateSubscription;
 
   NotificationBloc notificationBloc;
 
@@ -35,10 +36,22 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   InfoState get initialState => BaseInfoState();
 
   @override
+  void dispose() {
+    _updateSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Stream<InfoState> mapEventToState(
     InfoEvent event,
   ) async* {
-    if (event is UpdateInfo) {
+    if (event is InfoInitialize) {
+      yield await _update();
+      _updateSubscription = Stream.periodic(Duration(seconds: 5)).listen((dynamic) {
+        dispatch(UpdateInfo());
+      });
+    }
+    else if (event is UpdateInfo) {
       yield await _update();
     } else if (event is PlusPointPress) {
       var txnHash = await _plusPointPress();

@@ -6,6 +6,10 @@ abstract class InfoEvent extends Equatable {
   InfoEvent([List props = const <dynamic>[]]) : super(props);
 }
 
+class InfoInitialize extends InfoEvent {
+  @override
+  String toString() => 'InfoInitialize';
+}
 
 class UpdateInfo extends InfoEvent {
   @override
