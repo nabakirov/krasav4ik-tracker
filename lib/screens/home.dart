@@ -13,7 +13,7 @@ class Home extends StatelessWidget {
     AppBar appBar;
     Widget body;
     if (state is InfoScreenState) {
-      appBar = AppBar(title: Text('home'));
+      appBar = AppBar(title: Text('krasav4ik'));
       body = BlocBuilder<InfoBloc, InfoState>(
         builder: (context, state) => InfoScreen(),
       );
@@ -25,36 +25,43 @@ class Home extends StatelessWidget {
       );
     }
 
+    List<BottomNavigationBarItem> items = [
+      _buildNavBarItem(icon: Icons.home, text: 'home', selected: state is InfoScreenState),
+      _buildNavBarItem(icon: Icons.settings, text: 'settings', selected: state is SettingsScreenState)
+    ];
+
     return Scaffold(
       appBar: appBar,
       body: body,
-      bottomNavigationBar: _bottomNavigationBar(),
+      bottomNavigationBar: _bottomNavigationBar(items),
     );
   }
 
-  
-
-  Widget _bottomNavigationBar() {
+  Widget _bottomNavigationBar(List<BottomNavigationBarItem> items) {
     return BottomNavigationBar(
-      items: [
-        _buildNavBarItem(icon: Icons.home, text: 'home'),
-        _buildNavBarItem(icon: Icons.settings, text: 'settings')
-      ],
+      items: items,
       onTap: _onButtomNavBarTap,
     );
   }
-  
 
-  BottomNavigationBarItem _buildNavBarItem({IconData icon, String text}) {
+  BottomNavigationBarItem _buildNavBarItem(
+      {IconData icon, String text, bool selected: false}) {
+    Color color;
+    if (!selected) {
+      color = Colors.grey[500];
+    } else {
+      color = Colors.blueAccent;
+    }
     return BottomNavigationBarItem(
-      icon: Icon(icon, color: Colors.grey[500]),
+      icon: Icon(icon, color: color),
       title: Text(text, style: TextStyle(color: Colors.grey[500])),
-      backgroundColor: Colors.white
+      backgroundColor: Colors.white,
     );
   }
+
   void _onButtomNavBarTap(int index) {
     switch (index) {
-      case 0: 
+      case 0:
         homeBloc.dispatch(InfoSelected());
         return;
       case 1:
