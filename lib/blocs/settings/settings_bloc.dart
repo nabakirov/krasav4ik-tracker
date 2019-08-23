@@ -24,8 +24,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     contractChangeNickname = contract.function('changeNickname');
   }
   @override
-  SettingsState get initialState =>
-      BaseSettingsState(nickname: 'no nickname', address: '0x0');
+  SettingsState get initialState => BaseSettingsState();
 
   @override
   Stream<SettingsState> mapEventToState(
@@ -35,10 +34,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       if (address == null) {
         address = await credentials.extractAddress();
       }
-      var userData = await web3client.call(
-          contract: contract, function: contractEmployees, params: [address]);
-      yield BaseSettingsState(
-          nickname: userData[2].toString(), address: address.toString());
+      yield BaseSettingsState();
     } else if (event is ChangeNickname) {
       try {
         String txnHash = await web3client.sendTransaction(
@@ -52,10 +48,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       } catch (_) {
         notificationBloc.dispatch(NewError('something went wrong'));
       }
-      yield BaseSettingsState(nickname: event.nickname, address: event.address);
-      dispatch(PullSettingsEvent());
+      yield BaseSettingsState();
     } else if (event is OpenNicknameInputWidget) {
-      yield NicknameInputState(baseState: event.baseState);
+      var userData = await web3client.call(
+          contract: contract, function: contractEmployees, params: [address]);
+      yield NicknameInputState(nickname: userData[2].toString());
     }
   }
 }

@@ -12,21 +12,21 @@ class PullSettingsEvent extends SettingsEvent {
   String toString() => 'PullSettingsEvent';
 }
 
+class LoadSettingsScreen extends SettingsEvent {
+  @override
+  String toString() => 'LoadSettingsScreen';
+}
+
 class ChangeNickname extends SettingsEvent {
   @override
   String toString() => 'ChangeNickname';
 
   final String nickname;
-  final String address;
 
-  ChangeNickname({this.nickname, this.address}) : super([nickname, address]);
+  ChangeNickname({this.nickname}) : super([nickname]);
 }
 
 class OpenNicknameInputWidget extends SettingsEvent {
-  final BaseSettingsState baseState;
-
-  OpenNicknameInputWidget({this.baseState}) : super([baseState]);
-
   @override
   String toString() => 'OpenNicknameInputWidget';
 }

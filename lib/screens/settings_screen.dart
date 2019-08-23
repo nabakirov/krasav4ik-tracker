@@ -12,10 +12,11 @@ class SettingsScreen extends StatelessWidget {
     var state = settingsBloc.currentState;
     if (state is NicknameInputState) {
       var _nicknameController = TextEditingController();
+      _nicknameController.text = state.nickname;
       return Material(
           child: Stack(
         children: <Widget>[
-          mainWidget(notificationBloc, appBloc, state.baseState, settingsBloc),
+          mainWidget(notificationBloc, appBloc, settingsBloc),
           Stack(
             children: <Widget>[
               Positioned.fill(
@@ -55,9 +56,8 @@ class SettingsScreen extends StatelessWidget {
                                 notificationBloc.dispatch(
                                     NewError('nickname cannot be empty'));
                               } else {
-                                settingsBloc.dispatch(ChangeNickname(
-                                    nickname: text,
-                                    address: state.baseState.address));
+                                settingsBloc
+                                    .dispatch(ChangeNickname(nickname: text));
                               }
                             },
                           )
@@ -73,12 +73,12 @@ class SettingsScreen extends StatelessWidget {
       ));
     }
     if (state is BaseSettingsState) {
-      return mainWidget(notificationBloc, appBloc, state, settingsBloc);
+      return mainWidget(notificationBloc, appBloc, settingsBloc);
     }
   }
 
   Widget mainWidget(NotificationBloc notificationBloc, AppBloc appBloc,
-      BaseSettingsState state, SettingsBloc settingsBloc) {
+      SettingsBloc settingsBloc) {
     return Material(
         child: Padding(
       padding: EdgeInsets.all(20),
@@ -90,18 +90,13 @@ class SettingsScreen extends StatelessWidget {
             child: InkWell(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(state.nickname),
-                  Text('change nickname')
-                ],
+                children: <Widget>[Text('change nickname')],
               ),
               onTap: () {
-                settingsBloc
-                    .dispatch(OpenNicknameInputWidget(baseState: state));
+                settingsBloc.dispatch(OpenNicknameInputWidget());
               },
             ),
           ),
-          Container(color: Colors.redAccent, child: Text(state.address)),
           RaisedButton(
             child: Text('logout'),
             onPressed: () {

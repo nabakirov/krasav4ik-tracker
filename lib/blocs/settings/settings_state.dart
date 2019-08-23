@@ -7,22 +7,15 @@ abstract class SettingsState extends Equatable {
 }
 
 class BaseSettingsState extends SettingsState {
-  final String nickname;
-  final String address;
-  BaseSettingsState({
-    this.nickname,
-    this.address
-  }) : super([nickname, address]);
-
   @override
   String toString() => 'BaseSettingsState';
 }
 
 class NicknameInputState extends SettingsState {
-  final BaseSettingsState baseState;
+  final String nickname;
   NicknameInputState({
-    this.baseState
-  }) : super([baseState]);
+    this.nickname
+  }) : super([nickname]);
 
   @override
   String toString() => 'NicknameInputState';
