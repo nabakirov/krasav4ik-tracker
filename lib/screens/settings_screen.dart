@@ -60,7 +60,8 @@ class SettingsScreen extends StatelessWidget {
                   onPressed: () => settingsBloc.dispatch(LoadSettingsScreen()),
                 ),
                 FlatButton(
-                  child: Text('save'),
+                  child: Text('save',
+                  style: TextStyle(color: Colors.blueAccent)),
                   onPressed: () {
                     String text = _nicknameController.text;
                     if (text.isEmpty) {
