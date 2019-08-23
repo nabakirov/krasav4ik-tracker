@@ -1,5 +1,6 @@
 final contractJson =
-"""[
+"""
+[
 	{
 		"constant": false,
 		"inputs": [],
@@ -129,6 +130,20 @@ final contractJson =
 		"type": "function"
 	},
 	{
+		"constant": true,
+		"inputs": [],
+		"name": "getAddresses",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
@@ -196,20 +211,6 @@ final contractJson =
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "address_",
-				"type": "address"
-			}
-		],
-		"name": "removeEmployee",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"constant": true,
 		"inputs": [],
 		"name": "prizePointCount",
@@ -246,24 +247,6 @@ final contractJson =
 			}
 		],
 		"name": "changeSupervisor",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "from_",
-				"type": "address"
-			},
-			{
-				"name": "to_",
-				"type": "address"
-			}
-		],
-		"name": "changeAddress",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -335,4 +318,5 @@ final contractJson =
 		"name": "GoalAchieved",
 		"type": "event"
 	}
-]""";
+]
+""";
