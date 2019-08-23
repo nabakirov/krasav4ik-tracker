@@ -23,11 +23,23 @@ class Home extends StatelessWidget {
       body = BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) => SettingsScreen(),
       );
+      if (state is ChartScreenState) {
+        appBar = AppBar(title: Text('Top krasav4iks'));
+        body = ChartScreen();
+      }
     }
 
     List<BottomNavigationBarItem> items = [
-      _buildNavBarItem(icon: Icons.home, text: 'home', selected: state is InfoScreenState),
-      _buildNavBarItem(icon: Icons.settings, text: 'settings', selected: state is SettingsScreenState)
+      _buildNavBarItem(
+          icon: Icons.home, text: 'home', selected: state is InfoScreenState),
+      _buildNavBarItem(
+          icon: Icons.assessment,
+          text: 'top',
+          selected: state is ChartScreenState),
+      _buildNavBarItem(
+          icon: Icons.settings,
+          text: 'settings',
+          selected: state is SettingsScreenState),
     ];
 
     return Scaffold(
@@ -65,6 +77,9 @@ class Home extends StatelessWidget {
         homeBloc.dispatch(InfoSelected());
         return;
       case 1:
+        homeBloc.dispatch(ChartSelected());
+        return;
+      case 2:
         homeBloc.dispatch(SettingsSelected());
         return;
     }

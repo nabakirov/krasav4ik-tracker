@@ -14,6 +14,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield InfoScreenState();
     } else if (event is SettingsSelected) {
       yield SettingsScreenState();
+    } else if (event is ChartSelected) {
+      yield ChartScreenState();
     }
   }
 }

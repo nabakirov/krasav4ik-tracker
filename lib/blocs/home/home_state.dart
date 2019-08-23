@@ -15,3 +15,8 @@ class SettingsScreenState extends HomeState {
   @override
   String toString() => 'SettingsScreenState';
 }
+
+class ChartScreenState extends HomeState {
+  @override
+  String toString() => 'ChartScreenState';
+}

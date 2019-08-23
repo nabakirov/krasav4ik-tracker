@@ -15,3 +15,8 @@ class SettingsSelected extends HomeEvent {
   @override
   String toString() => 'SettingsSelected';
 }
+
+class ChartSelected extends HomeEvent {
+  @override
+  String toString() => 'ChartSelected';
+}
