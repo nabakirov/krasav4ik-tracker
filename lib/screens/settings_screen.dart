@@ -21,12 +21,12 @@ class SettingsScreen extends StatelessWidget {
             children: <Widget>[
               Positioned.fill(
                 child: Opacity(
-                  opacity: 0.7,
+                  opacity: 0.5,
                   child: InkWell(
                       child: Container(
                         color: Colors.grey,
                       ),
-                      onTap: () => settingsBloc.dispatch(PullSettingsEvent())),
+                      onTap: () => settingsBloc.dispatch(LoadSettingsScreen())),
                 ),
               ),
               Center(
@@ -34,28 +34,42 @@ class SettingsScreen extends StatelessWidget {
                 color: Colors.white,
                 child: Container(
                   width: 250,
-                  height: 250,
+                  height: 150,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Text('change nickname'),
+                      Center(child: Container(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Text('new nickname', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)))),
                       TextField(
                         controller: _nicknameController,
+                        autofocus: true,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 20),
+                        maxLines: 1,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          RaisedButton(
-                            child: Text('cancel'),
+                          FlatButton(
+                            child: Text('cancel', style: TextStyle(color: Colors.redAccent),),
                             onPressed: () =>
-                                settingsBloc.dispatch(PullSettingsEvent()),
+                                settingsBloc.dispatch(LoadSettingsScreen()),
                           ),
-                          RaisedButton(
+                          FlatButton(
                             child: Text('save'),
                             onPressed: () {
                               String text = _nicknameController.text;
                               if (text.isEmpty) {
                                 notificationBloc.dispatch(
                                     NewError('nickname cannot be empty'));
-                              } else {
+                              } else if(text.toLowerCase() == state.nickname.toLowerCase()) {
+                                settingsBloc.dispatch(LoadSettingsScreen());
+                              }
+                              
+                              else {
                                 settingsBloc
                                     .dispatch(ChangeNickname(nickname: text));
                               }
@@ -83,29 +97,28 @@ class SettingsScreen extends StatelessWidget {
         child: Padding(
       padding: EdgeInsets.all(20),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-            color: Colors.greenAccent,
-            child: InkWell(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[Text('change nickname')],
-              ),
-              onTap: () {
-                settingsBloc.dispatch(OpenNicknameInputWidget());
-              },
-            ),
-          ),
-          RaisedButton(
-            child: Text('logout'),
-            onPressed: () {
-              appBloc.dispatch(LogoutPress());
-              notificationBloc.dispatch(NewMessage('logout'));
-            },
-          )
+          _rowBuilder('change nickname', () {
+            settingsBloc.dispatch(OpenNicknameInputWidget());
+          }),
+          _rowBuilder('logout', () {
+            appBloc.dispatch(LogoutPress());
+            notificationBloc.dispatch(NewMessage('logout'));
+          }),
         ],
       ),
     ));
+  }
+
+  Widget _rowBuilder(String text, Function onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 50,
+        child: Center(child: Text(text, style: TextStyle(fontSize: 20))),
+      ),
+    );
   }
 }

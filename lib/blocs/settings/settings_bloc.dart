@@ -53,6 +53,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       var userData = await web3client.call(
           contract: contract, function: contractEmployees, params: [address]);
       yield NicknameInputState(nickname: userData[2].toString());
+    } else if (event is LoadSettingsScreen) {
+      yield BaseSettingsState();
     }
   }
 }
