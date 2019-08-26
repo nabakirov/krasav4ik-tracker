@@ -23,13 +23,13 @@ class ChartScreen extends StatelessWidget {
       );
     }
   }
+
   Future<void> _onRefresh(ChartBloc chartBloc) async {
     chartBloc.dispatch(FetchChartList());
   }
 
   Widget _cardBuilder(BuildContext context, UserModel userModel, int index) {
     return Card(
-      
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
@@ -37,23 +37,36 @@ class ChartScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(index.toString(), style: TextStyle(fontSize: 15),),
+            Text(
+              (index + 1).toString(),
+              style: TextStyle(fontSize: 15),
+            ),
             Column(
               children: <Widget>[
-                Text(userModel.nickname, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                Text(getShortenAddress(userModel.address), style: TextStyle(color: Colors.grey[500]),)
+                Text(
+                  userModel.nickname,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  getShortenAddress(userModel.address),
+                  style: TextStyle(color: Colors.grey[500]),
+                )
               ],
             ),
-            Text('${userModel.totalAchieves}/${userModel.points}', style: TextStyle(fontSize: 15),)
+            Text(
+              '${userModel.totalAchieves}/${userModel.points}',
+              style: TextStyle(fontSize: 15),
+            )
           ],
         ),
       ),
     );
   }
-
+  
   String getShortenAddress(String address) {
     int length = address.length;
-    String shorten = address.substring(0, 7) + '...' + address.substring(length - 7, length);
+    String shorten =
+        address.substring(0, 7) + '...' + address.substring(length - 7, length);
     return shorten;
   }
 }

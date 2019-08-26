@@ -33,10 +33,6 @@ class ChartBloc extends Bloc<ChartEvent, ChartState> {
   ) async* {
     if (event is LoadChartList) {
       yield await _update();
-      _updateSubscription =
-          Stream.periodic(Duration(seconds: 10)).listen((dynamic) {
-        dispatch(FetchChartList());
-      });
     } else if (event is FetchChartList) {
       yield await _update();
     }
@@ -45,11 +41,12 @@ class ChartBloc extends Bloc<ChartEvent, ChartState> {
   Future<BaseChartState> _update() async {
     List<UserModel> users = [];
     var addresses = await web3client.call(contract: contract, function: contractGetAddresses, params: []);
+    addresses = addresses[0];
     for (int i = 0; i < addresses.length; i++) {
       var address = addresses[i];
-      var _rawData = await web3client.call(contract: contract, function: contractEmployees, params: [address[0]]);
+      var _rawData = await web3client.call(contract: contract, function: contractEmployees, params: [address]);
       users.add(UserModel(
-        address: address[0].toString(),
+        address: address.toString(),
         nickname: _rawData[2].toString(),
         points: _rawData[1].toInt(),
         totalAchieves: _rawData[4].toInt()
