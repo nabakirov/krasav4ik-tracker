@@ -23,10 +23,12 @@ class Home extends StatelessWidget {
       body = BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) => SettingsScreen(),
       );
-      if (state is ChartScreenState) {
-        appBar = AppBar(title: Text('Top krasav4iks'));
-        body = ChartScreen();
-      }
+    }
+    if (state is ChartScreenState) {
+      appBar = AppBar(title: Text('Top krasav4iks'));
+      body = BlocBuilder<ChartBloc, ChartState>(
+        builder: (context, state) => ChartScreen(),
+      );
     }
 
     List<BottomNavigationBarItem> items = [

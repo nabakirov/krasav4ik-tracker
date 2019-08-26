@@ -65,6 +65,14 @@ class App extends StatelessWidget {
                       contract: appBloc.contract,
                       notificationBloc: notificationBloc
                     )..dispatch(PullSettingsEvent()),
+                  ),
+                  BlocProvider<ChartBloc>(
+                    builder: (context) => ChartBloc(
+                      web3client: appBloc.web3client,
+                      credentials: appBloc.credentials,
+                      contract: appBloc.contract,
+                      notificationBloc: notificationBloc
+                    )..dispatch(LoadChartList()),
                   )
                 ],
                 child: 
