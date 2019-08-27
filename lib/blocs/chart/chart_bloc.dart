@@ -48,8 +48,8 @@ class ChartBloc extends Bloc<ChartEvent, ChartState> {
       users.add(UserModel(
         address: address.toString(),
         nickname: _rawData[2].toString(),
-        points: _rawData[1].toInt(),
-        totalAchieves: _rawData[4].toInt()
+        points: _rawData[1],
+        totalAchieves: _rawData[4]
       ));
     }
     users.sort((a, b) {

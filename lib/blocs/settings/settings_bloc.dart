@@ -11,6 +11,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Credentials credentials;
   ContractFunction contractEmployees;
   ContractFunction contractChangeNickname;
+  ContractFunction contractSetInitialValue;
   EthereumAddress address;
 
   NotificationBloc notificationBloc;
@@ -22,6 +23,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       @required this.notificationBloc}) {
     contractEmployees = contract.function('employees');
     contractChangeNickname = contract.function('changeNickname');
+    contractSetInitialValue = contract.function('setInitialValue');
   }
   @override
   SettingsState get initialState => BaseSettingsState();
@@ -54,6 +56,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           contract: contract, function: contractEmployees, params: [address]);
       yield NicknameInputState(nickname: userData[2].toString());
     } else if (event is LoadSettingsScreen) {
+      yield BaseSettingsState();
+    } else if (event is OpenInitialValueWidget) {
+      var userData = await web3client.call(
+          contract: contract, function: contractEmployees, params: [address]);
+      yield InitialValueInputState(
+          points: userData[1].toInt(), totalAchieves: userData[4].toInt());
+    } else if (event is ChangeInitialValue) {
+      String txnHash = await web3client.sendTransaction(
+          credentials,
+          Transaction.callContract(
+              contract: contract,
+              function: contractSetInitialValue,
+              parameters: [address, event.points, event.totalAchieves]),
+          fetchChainIdFromNetworkId: true);
+      notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
       yield BaseSettingsState();
     }
   }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class UserModel {
   String address;
   String nickname;
-  int totalAchieves;
-  int points;
+  BigInt totalAchieves;
+  BigInt points;
 
   UserModel({
     @required this.address,

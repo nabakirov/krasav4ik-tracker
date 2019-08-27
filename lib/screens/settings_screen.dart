@@ -20,67 +20,99 @@ class SettingsScreen extends StatelessWidget {
     if (state is BaseSettingsState) {
       return mainWidget(notificationBloc, appBloc, settingsBloc);
     }
+
+    if (state is InitialValueInputState) {
+      return modalWidgetGenerator(
+          mainWidget(notificationBloc, appBloc, settingsBloc),
+          () => settingsBloc.dispatch(LoadSettingsScreen()),
+          initialValueWidget(state, settingsBloc, notificationBloc));
+    }
+  }
+
+  Widget initialValueWidget(InitialValueInputState state,
+      SettingsBloc settingsBloc, NotificationBloc notificationBloc) {
+    var _pointsController = TextEditingController();
+    var _achievesController = TextEditingController();
+
+    _pointsController.text = state.points.toString();
+    _achievesController.text = state.totalAchieves.toString();
+
+    var body = Container(
+      width: 200,
+      child: Column(
+        children: <Widget>[
+          TextField(
+            keyboardType: TextInputType.number,
+            controller: _pointsController,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+            maxLines: 1,
+            decoration: InputDecoration(labelText: 'points'),
+          ),
+          TextField(
+            keyboardType: TextInputType.number,
+            controller: _achievesController,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+            maxLines: 1,
+            decoration: InputDecoration(labelText: 'achieves'),
+          )
+        ],
+      ),
+    );
+
+    return cardBuilder(
+        title: 'set inital values',
+        body: body,
+        onCancel: () => settingsBloc.dispatch(LoadSettingsScreen()),
+        onOk: () {
+          if (_achievesController.text.isEmpty) {
+            notificationBloc
+                .dispatch(NewError('total achieves cannot be empty'));
+            return;
+          }
+          if (_pointsController.text.isEmpty) {
+            notificationBloc.dispatch(NewError('points cannot be empty'));
+            return;
+          }
+          var achievesValue = BigInt.parse(_achievesController.text);
+          var pointsValue = BigInt.parse(_pointsController.text);
+          if (achievesValue.isNegative || pointsValue.isNegative) {
+            notificationBloc.dispatch(NewError('values cannot be negative'));
+            return;
+          }
+          settingsBloc.dispatch(ChangeInitialValue(
+              points: pointsValue, totalAchieves: achievesValue));
+        });
   }
 
   Widget nicknameChangerWidget(NicknameInputState state,
       SettingsBloc settingsBloc, NotificationBloc notificationBloc) {
     var _nicknameController = TextEditingController();
     _nicknameController.text = state.nickname;
-    return Card(
-      color: Colors.white,
-      child: Container(
-        width: 250,
-        height: 150,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Center(
-                child: Container(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Text('new nickname',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold)))),
-            TextField(
-              controller: _nicknameController,
-              autofocus: true,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 20),
-              maxLines: 1,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'cancel',
-                    style: TextStyle(color: Colors.redAccent),
-                  ),
-                  onPressed: () => settingsBloc.dispatch(LoadSettingsScreen()),
-                ),
-                FlatButton(
-                  child: Text('save',
-                  style: TextStyle(color: Colors.blueAccent)),
-                  onPressed: () {
-                    String text = _nicknameController.text;
-                    if (text.isEmpty) {
-                      notificationBloc
-                          .dispatch(NewError('nickname cannot be empty'));
-                    } else if (text.toLowerCase() ==
-                        state.nickname.toLowerCase()) {
-                      settingsBloc.dispatch(LoadSettingsScreen());
-                    } else {
-                      settingsBloc.dispatch(ChangeNickname(nickname: text));
-                    }
-                  },
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+
+    var body = Container(
+        width: 200,
+        child: TextField(
+          controller: _nicknameController,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey, fontSize: 20),
+          maxLines: 1,
+        ));
+    return cardBuilder(
+        title: 'new nickname',
+        body: body,
+        onOk: () {
+          String text = _nicknameController.text;
+          if (text.isEmpty) {
+            notificationBloc.dispatch(NewError('nickname cannot be empty'));
+          } else if (text.toLowerCase() == state.nickname.toLowerCase()) {
+            settingsBloc.dispatch(LoadSettingsScreen());
+          } else {
+            settingsBloc.dispatch(ChangeNickname(nickname: text));
+          }
+        },
+        onCancel: () => settingsBloc.dispatch(LoadSettingsScreen()));
   }
 
   Widget mainWidget(NotificationBloc notificationBloc, AppBloc appBloc,
@@ -95,6 +127,8 @@ class SettingsScreen extends StatelessWidget {
           _rowBuilder('change nickname', () {
             settingsBloc.dispatch(OpenNicknameInputWidget());
           }),
+          _rowBuilder('set initial values',
+              () => settingsBloc.dispatch(OpenInitialValueWidget())),
           _rowBuilder('logout', () {
             appBloc.dispatch(LogoutPress());
             notificationBloc.dispatch(NewMessage('logout'));

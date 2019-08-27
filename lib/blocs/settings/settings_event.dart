@@ -30,3 +30,18 @@ class OpenNicknameInputWidget extends SettingsEvent {
   @override
   String toString() => 'OpenNicknameInputWidget';
 }
+
+class OpenInitialValueWidget extends SettingsEvent {
+  @override
+  String toString() => 'OpenInitialValueWidget';
+}
+
+class ChangeInitialValue extends SettingsEvent {
+  final BigInt points;
+  final BigInt totalAchieves;
+  ChangeInitialValue({this.points, this.totalAchieves})
+      : super([points, totalAchieves]);
+
+  @override
+  String toString() => 'ChangeInitialValue';
+}
