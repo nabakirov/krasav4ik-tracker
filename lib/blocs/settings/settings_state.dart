@@ -12,20 +12,11 @@ class BaseSettingsState extends SettingsState {
 }
 
 class NicknameInputState extends SettingsState {
-  final String nickname;
-  NicknameInputState({this.nickname}) : super([nickname]);
-
   @override
   String toString() => 'NicknameInputState';
 }
 
 class InitialValueInputState extends SettingsState {
-  final int points;
-  final int totalAchieves;
-
-  InitialValueInputState({this.points, this.totalAchieves})
-      : super([points, totalAchieves]);
-  
   @override
   String toString() => 'InitialValueInputState';
 }

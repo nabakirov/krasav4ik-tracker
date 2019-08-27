@@ -10,12 +10,14 @@ class SettingsScreen extends StatelessWidget {
     var notificationBloc = BlocProvider.of<NotificationBloc>(context);
     var appBloc = BlocProvider.of<AppBloc>(context);
     var settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    var infoBloc = BlocProvider.of<InfoBloc>(context);
     var state = settingsBloc.currentState;
     if (state is NicknameInputState) {
       return modalWidgetGenerator(
           mainWidget(notificationBloc, appBloc, settingsBloc),
           () => settingsBloc.dispatch(LoadSettingsScreen()),
-          nicknameChangerWidget(state, settingsBloc, notificationBloc));
+          nicknameChangerWidget(
+              settingsBloc, notificationBloc, infoBloc.currentState));
     }
     if (state is BaseSettingsState) {
       return mainWidget(notificationBloc, appBloc, settingsBloc);
@@ -25,17 +27,17 @@ class SettingsScreen extends StatelessWidget {
       return modalWidgetGenerator(
           mainWidget(notificationBloc, appBloc, settingsBloc),
           () => settingsBloc.dispatch(LoadSettingsScreen()),
-          initialValueWidget(state, settingsBloc, notificationBloc));
+          initialValueWidget(infoBloc.currentState, settingsBloc, notificationBloc));
     }
   }
 
-  Widget initialValueWidget(InitialValueInputState state,
+  Widget initialValueWidget(BaseInfoState state,
       SettingsBloc settingsBloc, NotificationBloc notificationBloc) {
     var _pointsController = TextEditingController();
     var _achievesController = TextEditingController();
 
-    _pointsController.text = state.points.toString();
-    _achievesController.text = state.totalAchieves.toString();
+    _pointsController.text = state.pointCount.toString();
+    _achievesController.text = state.achieveCount.toString();
 
     var body = Container(
       width: 200,
@@ -86,10 +88,10 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
-  Widget nicknameChangerWidget(NicknameInputState state,
-      SettingsBloc settingsBloc, NotificationBloc notificationBloc) {
+  Widget nicknameChangerWidget(SettingsBloc settingsBloc,
+      NotificationBloc notificationBloc, BaseInfoState infoState) {
     var _nicknameController = TextEditingController();
-    _nicknameController.text = state.nickname;
+    _nicknameController.text = infoState.nickname;
 
     var body = Container(
         width: 200,
@@ -106,7 +108,7 @@ class SettingsScreen extends StatelessWidget {
           String text = _nicknameController.text;
           if (text.isEmpty) {
             notificationBloc.dispatch(NewError('nickname cannot be empty'));
-          } else if (text.toLowerCase() == state.nickname.toLowerCase()) {
+          } else if (text.toLowerCase() == infoState.nickname.toLowerCase()) {
             settingsBloc.dispatch(LoadSettingsScreen());
           } else {
             settingsBloc.dispatch(ChangeNickname(nickname: text));
@@ -121,15 +123,15 @@ class SettingsScreen extends StatelessWidget {
         child: Padding(
       padding: EdgeInsets.all(20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _rowBuilder('change nickname', () {
+          _rowBuilder(Text('change nickname', style: TextStyle(fontSize: 25),), () {
             settingsBloc.dispatch(OpenNicknameInputWidget());
           }),
-          _rowBuilder('set initial values',
+          _rowBuilder(Text('set initial values', style: TextStyle(fontSize: 25)),
               () => settingsBloc.dispatch(OpenInitialValueWidget())),
-          _rowBuilder('logout', () {
+          _rowBuilder(Text('logout', style: TextStyle(color: Colors.redAccent, fontSize: 20),), () {
             appBloc.dispatch(LogoutPress());
             notificationBloc.dispatch(NewMessage('logout'));
           }),
@@ -138,12 +140,12 @@ class SettingsScreen extends StatelessWidget {
     ));
   }
 
-  Widget _rowBuilder(String text, Function onTap) {
+  Widget _rowBuilder(Text text, Function onTap) {
     return InkWell(
       onTap: onTap,
       child: Container(
         height: 50,
-        child: Center(child: Text(text, style: TextStyle(fontSize: 20))),
+        child: Center(child: text),
       ),
     );
   }

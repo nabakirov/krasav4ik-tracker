@@ -52,16 +52,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       }
       yield BaseSettingsState();
     } else if (event is OpenNicknameInputWidget) {
-      var userData = await web3client.call(
-          contract: contract, function: contractEmployees, params: [address]);
-      yield NicknameInputState(nickname: userData[2].toString());
+      yield NicknameInputState();
     } else if (event is LoadSettingsScreen) {
       yield BaseSettingsState();
     } else if (event is OpenInitialValueWidget) {
-      var userData = await web3client.call(
-          contract: contract, function: contractEmployees, params: [address]);
-      yield InitialValueInputState(
-          points: userData[1].toInt(), totalAchieves: userData[4].toInt());
+      yield InitialValueInputState();
     } else if (event is ChangeInitialValue) {
       String txnHash = await web3client.sendTransaction(
           credentials,
