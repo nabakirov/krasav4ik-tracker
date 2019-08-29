@@ -31,23 +31,14 @@ class ChartScreen extends StatelessWidget {
       // }
       return RefreshIndicator(
         onRefresh: () => _onRefresh(chartBloc),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                // height: 400,
-                child: ListView(
-                  children: items,
-                ),
-              ),
-            )
-          ],
-        ),
-      );
+        child: Center(
+                  child: Container(
+                    // color: Colors.green,
+                    child: ListView(
+                      children: items,
+                    ),
+                  ),
+                ));
     }
   }
 
