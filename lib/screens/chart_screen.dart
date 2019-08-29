@@ -11,6 +11,9 @@ class ChartScreen extends StatelessWidget {
     // return Material(child: Center(child: Text('chart'),),);
     ChartBloc chartBloc = BlocProvider.of<ChartBloc>(context);
     var state = chartBloc.currentState;
+    if (state is ChartLoadingState) {
+      return Loader();
+    }
     if (state is BaseChartState) {
       List<Widget> items = [];
       for (int i = 0; i < state.items.length; i++) {

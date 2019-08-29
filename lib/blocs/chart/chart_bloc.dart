@@ -12,7 +12,6 @@ class ChartBloc extends Bloc<ChartEvent, ChartState> {
   ContractFunction contractEmployees;
   ContractFunction contractGetAddresses;
   EthereumAddress address;
-  StreamSubscription _updateSubscription;
   NotificationBloc notificationBloc;
 
   ChartBloc(
@@ -25,7 +24,7 @@ class ChartBloc extends Bloc<ChartEvent, ChartState> {
   }
 
   @override
-  ChartState get initialState => BaseChartState(items: []);
+  ChartState get initialState => ChartLoadingState();
 
   @override
   Stream<ChartState> mapEventToState(
