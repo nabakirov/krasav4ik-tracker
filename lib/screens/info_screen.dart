@@ -10,6 +10,9 @@ class InfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     infoBloc = BlocProvider.of<InfoBloc>(context);
     var state = infoBloc.currentState;
+    if (state is InfoLoadingState) {
+      return Loader();
+    }
     if (state is ConfirmationState) {
       InfoEvent event;
       if (state.isPlus) {
@@ -59,22 +62,24 @@ class InfoScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                nicknameWidget(state.nickname),
-                Wrap(
-                  children: icons,
-                )
-              ]),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    nicknameWidget(state.nickname),
+                    Wrap(
+                      children: icons,
+                    )
+                  ]),
               flex: 2),
           Expanded(child: etherBalanceWidget(state.balance)),
           Expanded(
               child: pointCountWidget(state.pointCount, state.maxPointCount)),
           Expanded(child: achieveCountWidget(state.achieveCount)),
           Expanded(child: contractInfoWidget(state.achievePrize)),
-          Expanded(child: contractBalance(state.contractBalance),),
+          Expanded(
+            child: contractBalance(state.contractBalance),
+          ),
           Expanded(child: actionButtonWidget(state)),
         ],
       ),
@@ -84,17 +89,28 @@ class InfoScreen extends StatelessWidget {
   Widget actionButtonWidget(BaseInfoState state) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        RaisedButton(
-            onPressed: () => infoBloc
-                .dispatch(OpenConfirmationWidget(isPlus: false, state: state)),
-            child: Text('-'),
-            color: Colors.red),
-        RaisedButton(
-            onPressed: () => infoBloc
-                .dispatch(OpenConfirmationWidget(isPlus: true, state: state)),
-            child: Text('+'),
-            color: Colors.green),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: RaisedButton(
+                onPressed: () => infoBloc.dispatch(
+                    OpenConfirmationWidget(isPlus: false, state: state)),
+                child: Text('-'),
+                color: Colors.red),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: RaisedButton(
+                onPressed: () => infoBloc.dispatch(
+                    OpenConfirmationWidget(isPlus: true, state: state)),
+                child: Text('+'),
+                color: Colors.green),
+          ),
+        ),
       ],
     );
   }
@@ -116,8 +132,8 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget contractBalance(double balance) {
-    return _infoRowBuilder(_titleBuilder('contract balance'), _etherBalanceBuilder(balance));
-
+    return _infoRowBuilder(
+        _titleBuilder('contract balance'), _etherBalanceBuilder(balance));
   }
 
   Widget _etherBalanceBuilder(double balance) {

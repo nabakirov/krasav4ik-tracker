@@ -6,6 +6,11 @@ abstract class InfoState extends Equatable {
   InfoState([List props = const <dynamic>[]]) : super(props);
 }
 
+class InfoLoadingState extends InfoState {
+  @override
+  String toString() => 'LoadingState';
+}
+
 class BaseInfoState extends InfoState {
   final String nickname;
   final double balance;

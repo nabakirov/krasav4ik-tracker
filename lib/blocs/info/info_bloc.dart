@@ -35,7 +35,7 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   }
 
   @override
-  InfoState get initialState => BaseInfoState();
+  InfoState get initialState => InfoLoadingState();
 
   @override
   void dispose() {
