@@ -21,26 +21,61 @@ class InfoScreen extends StatelessWidget {
           _build(state.prevState),
           () => infoBloc
               .dispatch(CloseConfirmationWidget(infoState: state.prevState)),
-          cardBuilder(title: 'do u want to continue?', onOk: () => infoBloc.dispatch(event), onCancel: () => CloseConfirmationWidget(infoState: state.prevState), okText: 'yes', cancelText: 'no')
-      );
+          cardBuilder(
+              title: 'do u want to continue?',
+              onOk: () => infoBloc.dispatch(event),
+              onCancel: () =>
+                  CloseConfirmationWidget(infoState: state.prevState),
+              okText: 'yes',
+              cancelText: 'no'));
     }
     return _build(infoBloc.currentState);
   }
 
   Widget _build(BaseInfoState state) {
+    List<Widget> icons = [];
+    int boxesCount, titsCount;
+    boxesCount = state.achieveCount.toInt();
+    var pointsCount = state.pointCount.toInt();
+    titsCount = pointsCount ~/ 10;
+    for (int i = 0; i < boxesCount; i++) {
+      icons.add(Container(
+        width: 25,
+        child: imgBuilder('images/box.png'),
+      ));
+    }
+    for (int i = 0; i < titsCount; i++) {
+      icons.add(Container(
+        width: 25,
+        child: Icon(Icons.adjust),
+      ));
+    }
     return Padding(
       padding: EdgeInsets.all(20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          nicknameWidget(state.nickname),
-          etherBalanceWidget(state.balance),
-          pointCountWidget(state.pointCount, state.maxPointCount),
-          achieveCountWidget(state.achieveCount),
-          contractInfoWidget(state.achievePrize),
-          actionButtonWidget(state),
+          Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                nicknameWidget(state.nickname),
+                Wrap(
+                  children: icons,
+                )
+              ]),
+              flex: 2),
+          Expanded(child: etherBalanceWidget(state.balance)),
+          Expanded(
+              child: pointCountWidget(state.pointCount, state.maxPointCount)),
+          Expanded(child: achieveCountWidget(state.achieveCount)),
+          Expanded(child: contractInfoWidget(state.achievePrize)),
+          Expanded(child: contractBalance(state.contractBalance),),
+          Expanded(child: actionButtonWidget(state)),
         ],
       ),
     );
@@ -78,6 +113,11 @@ class InfoScreen extends StatelessWidget {
       text,
       style: TextStyle(fontSize: 25, fontWeight: FontWeight.normal),
     );
+  }
+
+  Widget contractBalance(double balance) {
+    return _infoRowBuilder(_titleBuilder('contract balance'), _etherBalanceBuilder(balance));
+
   }
 
   Widget _etherBalanceBuilder(double balance) {

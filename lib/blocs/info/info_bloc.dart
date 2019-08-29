@@ -15,6 +15,7 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   ContractFunction contractAchievePrize;
   ContractFunction contractPlus;
   ContractFunction contractMinus;
+  ContractFunction contractBalance;
   EthereumAddress address;
   StreamSubscription _updateSubscription;
 
@@ -30,6 +31,7 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     contractAchievePrize = contract.function('prizePointAmount');
     contractPlus = contract.function('plus');
     contractMinus = contract.function('minus');
+    contractBalance = contract.function('balance');
   }
 
   @override
@@ -110,9 +112,11 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     var achievePrize = await web3client
         .call(contract: contract, function: contractAchievePrize, params: []);
     var balance = await web3client.getBalance(address);
+    var smartBalance = await web3client.call(contract: contract, function: contractBalance, params: []);
 
     return BaseInfoState(
         balance: balance.getValueInUnit(EtherUnit.ether),
+        contractBalance: smartBalance[0].toDouble() / pow(10, 18),
         pointCount: userData[1].toInt(),
         nickname: userData[2].toString(),
         achieveCount: userData[4].toInt(),

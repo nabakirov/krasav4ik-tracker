@@ -13,6 +13,7 @@ class BaseInfoState extends InfoState {
   final int maxPointCount;
   final int achieveCount;
   final double achievePrize;
+  final double contractBalance;
 
   BaseInfoState(
       {this.nickname,
@@ -20,7 +21,8 @@ class BaseInfoState extends InfoState {
       this.pointCount,
       this.maxPointCount,
       this.achieveCount,
-      this.achievePrize})
+      this.achievePrize,
+      this.contractBalance})
       : super([
           nickname,
           balance,
