@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:krasav4ik/blocs/blocs.dart';
 import 'package:krasav4ik/models/models.dart';
+import 'package:krasav4ik/tools/tools.dart';
 
 class ChartScreen extends StatelessWidget {
   @override
@@ -63,7 +64,7 @@ class ChartScreen extends StatelessWidget {
     for (int i = 0; i < boxesCount; i++) {
       icons.add(Container(
         width: 20,
-        child: _imgBuilder('images/box.png'),
+        child: imgBuilder('images/box.png'),
       ));
     }
     for (int i = 0; i < titsCount; i++) {
@@ -131,7 +132,7 @@ class ChartScreen extends StatelessWidget {
     titsCount = pointsCount ~/ 10;
     for (int i = 0; i < boxesCount; i++) {
       icons.add(Container(
-        child: _imgBuilder('images/box.png'),
+        child: imgBuilder('images/box.png'),
       ));
     }
     for (int i = 0; i < titsCount; i++) {
@@ -190,16 +191,12 @@ class ChartScreen extends StatelessWidget {
     );
   }
 
-  Widget _imgBuilder(String path) {
-    return Material(
-      child: Image.asset(path),
-    );
-  }
+  
 
   Widget _theOneIcon() {
     final String path = 'images/dumbbell.png';
     return Container(
-      child: _imgBuilder(path),
+      child: imgBuilder(path),
     );
   }
 }
