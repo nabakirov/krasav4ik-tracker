@@ -54,14 +54,17 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     } else if (event is UpdateInfo) {
       yield await _update();
     } else if (event is PlusPointPress) {
+      _updateSubscription.resume();
+      yield event.infoState;
       try {
         var txnHash = await _plusPointPress();
         notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
       } catch (_) {
         notificationBloc.dispatch(NewError('something went wrong'));
       }
-      yield await _update();
     } else if (event is MinusPointPress) {
+      _updateSubscription.resume();
+      yield event.infoState;
       try {
         var txnHash = await _minusPointPress();
         notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
@@ -69,6 +72,12 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
         notificationBloc.dispatch(NewError('something went wrong'));
       }
       yield await _update();
+    } else if (event is OpenConfirmationWidget) {
+      _updateSubscription.pause();
+      yield ConfirmationState(isPlus: event.isPlus, prevState: event.state);
+    } else if (event is CloseConfirmationWidget) {
+      _updateSubscription.resume();
+      yield event.infoState;
     }
   }
 

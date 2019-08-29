@@ -2,49 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:krasav4ik/blocs/blocs.dart';
+import 'package:krasav4ik/tools/tools.dart';
 
 class InfoScreen extends StatelessWidget {
   InfoBloc infoBloc;
   @override
   Widget build(BuildContext context) {
     infoBloc = BlocProvider.of<InfoBloc>(context);
-    return Padding(
-      child: _build(infoBloc.currentState),
-      padding: EdgeInsets.all(20),
-    );
-
+    var state = infoBloc.currentState;
+    if (state is ConfirmationState) {
+      InfoEvent event;
+      if (state.isPlus) {
+        event = PlusPointPress(infoState: state.prevState);
+      } else {
+        event = MinusPointPress(infoState: state.prevState);
+      }
+      return modalWidgetGenerator(
+          _build(state.prevState),
+          () => infoBloc
+              .dispatch(CloseConfirmationWidget(infoState: state.prevState)),
+          cardBuilder(title: 'do u want to continue?', onOk: () => infoBloc.dispatch(event), onCancel: () => CloseConfirmationWidget(infoState: state.prevState), okText: 'yes', cancelText: 'no')
+      );
+    }
+    return _build(infoBloc.currentState);
   }
 
   Widget _build(BaseInfoState state) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        nicknameWidget(state.nickname),
-        etherBalanceWidget(state.balance),
-        pointCountWidget(state.pointCount, state.maxPointCount),
-        achieveCountWidget(state.achieveCount),
-        contractInfoWidget(state.achievePrize),
-        actionButtonWidget(),
-      ],
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          nicknameWidget(state.nickname),
+          etherBalanceWidget(state.balance),
+          pointCountWidget(state.pointCount, state.maxPointCount),
+          achieveCountWidget(state.achieveCount),
+          contractInfoWidget(state.achievePrize),
+          actionButtonWidget(state),
+        ],
+      ),
     );
   }
 
-  Widget actionButtonWidget() {
+  Widget actionButtonWidget(BaseInfoState state) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         RaisedButton(
-          onPressed: () => infoBloc.dispatch(MinusPointPress()),
-          child: Text('-'),
-          color: Colors.red
-        ),
+            onPressed: () => infoBloc
+                .dispatch(OpenConfirmationWidget(isPlus: false, state: state)),
+            child: Text('-'),
+            color: Colors.red),
         RaisedButton(
-          onPressed: () => infoBloc.dispatch(PlusPointPress()),
-          child: Text('+'),
-          color: Colors.green
-        ),
+            onPressed: () => infoBloc
+                .dispatch(OpenConfirmationWidget(isPlus: true, state: state)),
+            child: Text('+'),
+            color: Colors.green),
       ],
     );
   }
@@ -66,7 +81,7 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget _etherBalanceBuilder(double balance) {
-    if (balance  == null) {
+    if (balance == null) {
       balance = 0;
     }
     return Row(
@@ -82,7 +97,7 @@ class InfoScreen extends StatelessWidget {
   }
 
   Widget nicknameWidget(String nickname) {
-    if (nickname  == null) {
+    if (nickname == null) {
       nickname = 'no nickname';
     }
     return Row(
@@ -140,5 +155,4 @@ class InfoScreen extends StatelessWidget {
     return _infoRowBuilder(
         _titleBuilder('achieve prize'), _etherBalanceBuilder(achivePrize));
   }
-  
 }

@@ -41,3 +41,12 @@ class CreatedInfoState extends InfoState {
   final String txnHash;
   CreatedInfoState({@required this.txnHash}) : super([txnHash]);
 }
+
+class ConfirmationState extends InfoState {
+  final bool isPlus;
+  final InfoState prevState;
+
+  ConfirmationState({@required this.isPlus, @required this.prevState}) : super([isPlus]);
+  @override
+  String toString() => 'ConfirmationState';
+}
