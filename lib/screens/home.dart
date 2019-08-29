@@ -13,19 +13,19 @@ class Home extends StatelessWidget {
     AppBar appBar;
     Widget body;
     if (state is InfoScreenState) {
-      appBar = AppBar(title: Text('krasav4ik'));
+      // appBar = AppBar(title: Text('krasav4ik'));
       body = BlocBuilder<InfoBloc, InfoState>(
         builder: (context, state) => InfoScreen(),
       );
     }
     if (state is SettingsScreenState) {
-      appBar = AppBar(title: Text('settings'));
+      // appBar = AppBar(title: Text('settings'));
       body = BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) => SettingsScreen(),
       );
     }
     if (state is ChartScreenState) {
-      appBar = AppBar(title: Text('chart'));
+      // appBar = AppBar(title: Text('chart'));
       body = BlocBuilder<ChartBloc, ChartState>(
         builder: (context, state) => ChartScreen(),
       );
