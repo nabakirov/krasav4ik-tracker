@@ -19,13 +19,13 @@ class Home extends StatelessWidget {
       );
     }
     if (state is SettingsScreenState) {
-      appBar = AppBar(title: Text('Settings'));
+      appBar = AppBar(title: Text('settings'));
       body = BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) => SettingsScreen(),
       );
     }
     if (state is ChartScreenState) {
-      appBar = AppBar(title: Text('Top krasav4iks'));
+      appBar = AppBar(title: Text('chart'));
       body = BlocBuilder<ChartBloc, ChartState>(
         builder: (context, state) => ChartScreen(),
       );
@@ -36,7 +36,7 @@ class Home extends StatelessWidget {
           icon: Icons.home, text: 'home', selected: state is InfoScreenState),
       _buildNavBarItem(
           icon: Icons.assessment,
-          text: 'top',
+          text: 'chart',
           selected: state is ChartScreenState),
       _buildNavBarItem(
           icon: Icons.settings,
