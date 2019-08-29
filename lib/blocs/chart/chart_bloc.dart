@@ -52,12 +52,12 @@ class ChartBloc extends Bloc<ChartEvent, ChartState> {
         totalAchieves: _rawData[4]
       ));
     }
-    users.sort((a, b) {
-      if (a.totalAchieves == b.totalAchieves) {
-        return a.points.compareTo(b.points) * -1;
-      }
-      return a.totalAchieves.compareTo(b.totalAchieves) * -1;
-    });
+    // users.sort((a, b) {
+    //   if (a.totalAchieves == b.totalAchieves) {
+    //     return a.points.compareTo(b.points) * -1;
+    //   }
+    //   return a.totalAchieves.compareTo(b.totalAchieves) * -1;
+    // });
     return BaseChartState(items: users);
   }
 

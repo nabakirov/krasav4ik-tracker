@@ -15,19 +15,19 @@ class ChartScreen extends StatelessWidget {
       for (int i = 0; i < state.items.length; i++) {
         items.add(_cardBuilder(context, state.items[i], i));
       }
-      var theOneUser;
-      if (state.items.length == 0) {
-        theOneUser = UserModel(
-            points: BigInt.from(0),
-            totalAchieves: BigInt.from(0),
-            address: '0x0',
-            nickname: 'no nickname');
-      } else {
-        theOneUser = state.items[0];
-      }
-      if (items.length != 0) {
-        items.removeAt(0);
-      }
+      // var theOneUser;
+      // if (state.items.length == 0) {
+      //   theOneUser = UserModel(
+      //       points: BigInt.from(0),
+      //       totalAchieves: BigInt.from(0),
+      //       address: '0x0',
+      //       nickname: 'no nickname');
+      // } else {
+      //   theOneUser = state.items[0];
+      // }
+      // if (items.length != 0) {
+      //   items.removeAt(0);
+      // }
       return RefreshIndicator(
         onRefresh: () => _onRefresh(chartBloc),
         child: Column(
@@ -35,7 +35,6 @@ class ChartScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Expanded(child: theOne(theOneUser), flex: 1),
             Expanded(
               flex: 1,
               child: Container(
@@ -56,21 +55,32 @@ class ChartScreen extends StatelessWidget {
   }
 
   Widget _cardBuilder(BuildContext context, UserModel userModel, int index) {
+    List<Widget> icons = [];
+    int boxesCount, titsCount;
+    boxesCount = userModel.totalAchieves.toInt();
+    var pointsCount = userModel.points.toInt();
+    titsCount = pointsCount ~/ 10;
+    for (int i = 0; i < boxesCount; i++) {
+      icons.add(Container(
+        width: 20,
+        child: _imgBuilder('images/box.png'),
+      ));
+    }
+    for (int i = 0; i < titsCount; i++) {
+      icons.add(Container(
+        width: 20,
+        child: Icon(Icons.adjust),
+      ));
+    }
     return Card(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              child: Text(
-                (index + 1).toString(),
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-            Container(
+            Expanded(
               child: Column(
                 children: <Widget>[
                   Text(
@@ -84,10 +94,19 @@ class ChartScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              child: Text(
-                '${userModel.totalAchieves}/${userModel.points}',
-                style: TextStyle(fontSize: 15),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Text(
+                  '${userModel.totalAchieves}/${userModel.points}',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Wrap(
+                direction: Axis.horizontal,
+                children: icons,
               ),
             )
           ],
