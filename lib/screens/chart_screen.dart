@@ -110,13 +110,7 @@ class ChartScreen extends StatelessWidget {
     );
   }
 
-  String getShortenAddress({String address, int count: 7}) {
-    int length = address.length;
-    String shorten = address.substring(0, count) +
-        '...' +
-        address.substring(length - count, length);
-    return shorten;
-  }
+  
 
   Widget theOne(UserModel userModel) {
     List<Widget> icons = [];

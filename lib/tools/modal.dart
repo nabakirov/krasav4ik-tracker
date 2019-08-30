@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-Widget modalWidgetGenerator(
-    Widget background, Function onBackgroundTap, Widget modal) {
+Widget modalWidgetGenerator({
+    Widget background, Function onBackgroundTap, Widget modal}) {
+  List<Widget> items;
+  if (background == null) {
+    items = [_opacityLayer(onBackgroundTap), Center(child: modal)];
+  } else {
+    items = [background, _opacityLayer(onBackgroundTap), Center(child: modal)];
+  }
   return Material(
       child: Stack(
-    children: <Widget>[
-      background,
-      Positioned.fill(
-          child: Opacity(
-        opacity: 0.5,
-        child: InkWell(
-          child: Container(color: Colors.grey[500]),
-          onTap: onBackgroundTap,
-        ),
-      )),
-      Center(child: modal)
-    ],
+    children: items,
+  ));
+}
+
+Widget _opacityLayer(Function onBackgroundTap) {
+  return Positioned.fill(
+      child: Opacity(
+    opacity: 0.5,
+    child: InkWell(
+      child: Container(color: Colors.grey[500]),
+      onTap: onBackgroundTap,
+    ),
   ));
 }
 
@@ -62,7 +68,13 @@ Widget cardBuilder(
       _buttons(cancelText, onCancel, okText, onOk)
     ];
   } else {
-    children = [_title(title), SizedBox(height: 20,), _buttons(cancelText, onCancel, okText, onOk)];
+    children = [
+      _title(title),
+      SizedBox(
+        height: 20,
+      ),
+      _buttons(cancelText, onCancel, okText, onOk)
+    ];
   }
   return Card(
       color: Colors.white,

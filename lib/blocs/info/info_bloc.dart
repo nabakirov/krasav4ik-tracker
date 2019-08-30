@@ -18,6 +18,7 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   ContractFunction contractBalance;
   EthereumAddress address;
   StreamSubscription _updateSubscription;
+  StreamSubscription _transactionInfo;
 
   NotificationBloc notificationBloc;
 
@@ -56,24 +57,25 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     } else if (event is UpdateInfo) {
       yield await _update();
     } else if (event is PlusPointPress) {
-      _updateSubscription.resume();
       yield event.infoState;
       try {
         var txnHash = await _plusPointPress();
         notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+        _waitTransactionInfo(txnHash);
       } catch (_) {
         notificationBloc.dispatch(NewError('something went wrong'));
       }
-    } else if (event is MinusPointPress) {
       _updateSubscription.resume();
+    } else if (event is MinusPointPress) {
       yield event.infoState;
       try {
         var txnHash = await _minusPointPress();
         notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+        _waitTransactionInfo(txnHash);
       } catch (_) {
         notificationBloc.dispatch(NewError('something went wrong'));
       }
-      yield await _update();
+      _updateSubscription.resume();
     } else if (event is OpenConfirmationWidget) {
       _updateSubscription.pause();
       yield ConfirmationState(isPlus: event.isPlus, prevState: event.state);
@@ -83,20 +85,35 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     }
   }
 
+  void _waitTransactionInfo(String txnHash) {
+    _transactionInfo =
+        Stream.periodic(Duration(seconds: 5)).listen((dynamic) async {
+          print(txnHash);
+      TransactionReceipt response = await web3client.getTransactionReceipt(txnHash);
+      print(response);
+      print(txnHash);
+      if (response != null) {
+        notificationBloc
+            .dispatch(ShowTransactionInfo(transactionReceipt: response, postAction: () => _transactionInfo?.cancel()));
+      }
+    });
+  }
+
   Future<String> _plusPointPress() async {
     String transactionHash = await web3client.sendTransaction(
         credentials,
         Transaction.callContract(
-            contract: contract, function: contractPlus, parameters: []),
+            contract: contract, function: contractPlus, parameters: [], gasPrice: EtherAmount.inWei(BigInt.from(10000000000))),
         fetchChainIdFromNetworkId: true);
     return transactionHash;
   }
 
   Future<String> _minusPointPress() async {
     String transactionHash = await web3client.sendTransaction(
+
         credentials,
         Transaction.callContract(
-            contract: contract, function: contractMinus, parameters: []),
+            contract: contract, function: contractMinus, parameters: [], gasPrice: EtherAmount.inWei(BigInt.from(10000000000))),
         fetchChainIdFromNetworkId: true);
     return transactionHash;
   }
@@ -112,7 +129,8 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     var achievePrize = await web3client
         .call(contract: contract, function: contractAchievePrize, params: []);
     var balance = await web3client.getBalance(address);
-    var smartBalance = await web3client.call(contract: contract, function: contractBalance, params: []);
+    var smartBalance = await web3client
+        .call(contract: contract, function: contractBalance, params: []);
 
     return BaseInfoState(
         balance: balance.getValueInUnit(EtherUnit.ether),

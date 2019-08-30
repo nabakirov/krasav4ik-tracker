@@ -21,10 +21,10 @@ class InfoScreen extends StatelessWidget {
         event = MinusPointPress(infoState: state.prevState);
       }
       return modalWidgetGenerator(
-          _build(state.prevState),
-          () => infoBloc
+          background: _build(state.prevState),
+          onBackgroundTap: () => infoBloc
               .dispatch(CloseConfirmationWidget(infoState: state.prevState)),
-          cardBuilder(
+          modal: cardBuilder(
               title: 'do u want to continue?',
               onOk: () => infoBloc.dispatch(event),
               onCancel: () =>

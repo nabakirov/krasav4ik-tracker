@@ -14,9 +14,9 @@ class SettingsScreen extends StatelessWidget {
     var state = settingsBloc.currentState;
     if (state is NicknameInputState) {
       return modalWidgetGenerator(
-          mainWidget(notificationBloc, appBloc, settingsBloc),
-          () => settingsBloc.dispatch(LoadSettingsScreen()),
-          nicknameChangerWidget(
+          background: mainWidget(notificationBloc, appBloc, settingsBloc),
+          onBackgroundTap: () => settingsBloc.dispatch(LoadSettingsScreen()),
+          modal: nicknameChangerWidget(
               settingsBloc, notificationBloc, infoBloc.currentState));
     }
     if (state is BaseSettingsState) {
@@ -25,9 +25,9 @@ class SettingsScreen extends StatelessWidget {
 
     if (state is InitialValueInputState) {
       return modalWidgetGenerator(
-          mainWidget(notificationBloc, appBloc, settingsBloc),
-          () => settingsBloc.dispatch(LoadSettingsScreen()),
-          initialValueWidget(infoBloc.currentState, settingsBloc, notificationBloc));
+          background: mainWidget(notificationBloc, appBloc, settingsBloc),
+          onBackgroundTap: () => settingsBloc.dispatch(LoadSettingsScreen()),
+          modal: initialValueWidget(infoBloc.currentState, settingsBloc, notificationBloc));
     }
   }
 

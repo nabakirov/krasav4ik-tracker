@@ -19,7 +19,11 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     } else if (event is HideNotificationBar) {
       yield EmptyState();
     } else if (event is ShowTransactionHash) {
-      yield* _stateWithSelfDestroy(notificationState: TxnState(txnHash: event.txnHash), duration: 5);
+      yield TxnState(txnHash: event.txnHash);
+    } else if (event is ShowTransactionInfo) {
+      yield TransactionInfo(transactionReceipt: event.transactionReceipt);
+      // yield FrozenApp(duration: event.duration);
+      // Stream.periodic(event.duration).take(1).listen((dynamic) => dispatch(HideNotificationBar()));
     }
   }
 

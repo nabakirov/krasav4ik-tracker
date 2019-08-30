@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:web3dart/web3dart.dart';
 
 @immutable
 abstract class NotificationState extends Equatable {
@@ -35,4 +36,12 @@ class TxnState extends NotificationState {
 
   @override
   String toString() => "TxnState";
+}
+
+class TransactionInfo extends NotificationState {
+  final TransactionReceipt transactionReceipt;
+  TransactionInfo({@required this.transactionReceipt}) : super([transactionReceipt]);
+
+  @override
+  String toString() => 'TransactionInfo';
 }

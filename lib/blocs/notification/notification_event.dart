@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:web3dart/web3dart.dart';
 
 @immutable
 abstract class NotificationEvent extends Equatable {
@@ -35,6 +36,16 @@ class ShowTransactionHash extends NotificationEvent {
 
   final String txnHash;
 
-  ShowTransactionHash({@required this.txnHash})
-      : super([txnHash]);
+  ShowTransactionHash({@required this.txnHash}) : super([txnHash]);
+}
+
+class ShowTransactionInfo extends NotificationEvent {
+  final TransactionReceipt transactionReceipt;
+  ShowTransactionInfo(
+      {@required this.transactionReceipt, Function postAction}) {
+    postAction();
+  }
+
+  @override
+  String toString() => 'ShowTransactionInfo';
 }
