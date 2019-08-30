@@ -97,7 +97,9 @@ class InfoScreen extends StatelessWidget {
             child: RaisedButton(
                 onPressed: () => infoBloc.dispatch(
                     OpenConfirmationWidget(isPlus: false, state: state)),
-                child: Text('-'),
+                child: Text('-',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.normal)),
                 color: Colors.red),
           ),
         ),
@@ -107,7 +109,9 @@ class InfoScreen extends StatelessWidget {
             child: RaisedButton(
                 onPressed: () => infoBloc.dispatch(
                     OpenConfirmationWidget(isPlus: true, state: state)),
-                child: Text('+'),
+                child: Text('+',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.normal)),
                 color: Colors.green),
           ),
         ),
