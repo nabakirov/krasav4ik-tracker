@@ -6,3 +6,5 @@ final String wsUrl = 'ws://wsropsten.fridayte.ch';
 final String etherscan = 'https://ropsten.etherscan.io/tx/';
 
 
+final int maxGas = 100000;
+final int gasPriceInWei = 10000000000;
