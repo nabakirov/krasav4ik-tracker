@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "676040883015",
+    "firebase_url": "https://krasav4ik-a3222.firebaseio.com",
+    "project_id": "krasav4ik-a3222",
+    "storage_bucket": "krasav4ik-a3222.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676040883015:android:daa457be9e2ab4be",
+        "android_client_info": {
+          "package_name": "com.example.krasav4ik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "676040883015-4gkpfntrnkgra0jg316ev4b7705ejdbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWl46cAlIfD4JQvWDrKJeIR3Oz7JsMnmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "676040883015-4gkpfntrnkgra0jg316ev4b7705ejdbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
