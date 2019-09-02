@@ -83,18 +83,20 @@ class ChartScreen extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   Text(
-                    getShortenAddress(address: userModel.address),
+                    getShortenAddress(address: userModel.address, count: 5),
                     style: TextStyle(color: Colors.grey[500]),
                   )
                 ],
               ),
             ),
             Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  '${userModel.totalAchieves}/${userModel.points}',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              child: Center(
+                child: Container(
+                  // padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    '${userModel.totalAchieves}/${userModel.points}',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
