@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:krasav4ik/blocs/blocs.dart';
 import 'package:krasav4ik/configs.dart' as config;
-import 'package:krasav4ik/tools/modal.dart';
 import 'package:krasav4ik/tools/tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/crypto.dart';
@@ -81,26 +80,37 @@ class NotificationWidget extends StatelessWidget {
   Widget _txnInfo(
       TransactionReceipt receipt, NotificationBloc notificationBloc) {
     return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Text('transaction info', style: TextStyle(fontSize: 20),),
-          _rowBuilder(Text('block number'),
-              Text(receipt.blockNumber.blockNum.toString())),
-          _rowBuilder(Text('gas used'), Text(receipt.gasUsed.toString())),
-          FlatButton(
-            child: Text('close', style: TextStyle(color: Colors.blue)),
-            onPressed: () => notificationBloc.dispatch(HideNotificationBar()),
-          )
-        ],
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            link(
+                child: Container(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'transaction info',
+                      style: TextStyle(fontSize: 20, color: Colors.blue),
+                    )),
+                url:
+                    '${config.etherscan}${bytesToHex(receipt.transactionHash, include0x: true)}'),
+            _rowBuilder(Text('block number'),
+                Text(receipt.blockNumber.blockNum.toString())),
+            _rowBuilder(Text('gas used'), Text(receipt.gasUsed.toString())),
+            FlatButton(
+              child: Text('close', style: TextStyle(color: Colors.blue)),
+              onPressed: () => notificationBloc.dispatch(HideNotificationBar()),
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget _txnFailed(
       TransactionReceipt receipt, NotificationBloc notificationBloc) {
-        var txnHash = bytesToHex(receipt.transactionHash, include0x: true);
+    var txnHash = bytesToHex(receipt.transactionHash, include0x: true);
     return Container(
       width: 200,
       child: Card(
@@ -110,20 +120,20 @@ class NotificationWidget extends StatelessWidget {
           children: <Widget>[
             Text('transaction not sent'),
             link(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'view on etherscan',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      Text(
-                        getShortenAddress(address: txnHash),
-                        style: TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ),
-                  url: '${config.etherscan}$txnHash'),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'view on etherscan',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    Text(
+                      getShortenAddress(address: txnHash),
+                      style: TextStyle(color: Colors.grey),
+                    )
+                  ],
+                ),
+                url: '${config.etherscan}$txnHash'),
             FlatButton(
               child: Text('close', style: TextStyle(color: Colors.blue)),
               onPressed: () => notificationBloc.dispatch(HideNotificationBar()),
@@ -138,14 +148,11 @@ class NotificationWidget extends StatelessWidget {
     return Container(
       width: 250,
       padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
+      child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          title,
-          body
-        ],
+        children: <Widget>[title, body],
       ),
     );
   }

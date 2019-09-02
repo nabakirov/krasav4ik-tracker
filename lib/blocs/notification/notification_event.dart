@@ -43,7 +43,9 @@ class ShowTransactionInfo extends NotificationEvent {
   final TransactionReceipt transactionReceipt;
   ShowTransactionInfo(
       {@required this.transactionReceipt, Function postAction}) {
-    postAction();
+    if (postAction != null) {
+      postAction();
+    }
   }
 
   @override
