@@ -90,7 +90,10 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
     _transactionInfo =
         Stream.periodic(Duration(seconds: 5)).listen((dynamic) async {
       TransactionReceipt response =
-          await web3client.getTransactionReceipt(txnHash);
+          await web3client.getTransactionReceipt(txnHash).catchError((dynamic) {
+            notificationBloc.dispatch(NewError('web3 call failed'));
+            _transactionInfo.cancel();
+          });
       print('getTransactionReceipt of $txnHash = $response');
       if (response != null) {
         notificationBloc.dispatch(ShowTransactionInfo(
