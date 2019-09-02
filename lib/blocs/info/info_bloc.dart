@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:krasav4ik/blocs/blocs.dart';
+import 'package:krasav4ik/configs.dart' as config;
 import 'package:meta/meta.dart';
 import 'package:web3dart/web3dart.dart';
 import './bloc.dart';
@@ -88,32 +89,34 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   void _waitTransactionInfo(String txnHash) {
     _transactionInfo =
         Stream.periodic(Duration(seconds: 5)).listen((dynamic) async {
-          print(txnHash);
-      TransactionReceipt response = await web3client.getTransactionReceipt(txnHash);
-      print(response);
-      print(txnHash);
+      TransactionReceipt response =
+          await web3client.getTransactionReceipt(txnHash);
+      print('getTransactionReceipt of $txnHash = $response');
       if (response != null) {
-        notificationBloc
-            .dispatch(ShowTransactionInfo(transactionReceipt: response, postAction: () => _transactionInfo?.cancel()));
+        notificationBloc.dispatch(ShowTransactionInfo(
+            transactionReceipt: response,
+            postAction: () => _transactionInfo?.cancel()));
       }
     });
   }
 
   Future<String> _plusPointPress() async {
-    String transactionHash = await web3client.sendTransaction(
-        credentials,
-        Transaction.callContract(
-            contract: contract, function: contractPlus, parameters: [], gasPrice: EtherAmount.inWei(BigInt.from(10000000000))),
-        fetchChainIdFromNetworkId: true);
-    return transactionHash;
+    return await _btnPress(contractPlus);
   }
 
   Future<String> _minusPointPress() async {
-    String transactionHash = await web3client.sendTransaction(
+    return await _btnPress(contractMinus);
+  }
 
+  Future<String> _btnPress(ContractFunction function) async {
+    String transactionHash = await web3client.sendTransaction(
         credentials,
         Transaction.callContract(
-            contract: contract, function: contractMinus, parameters: [], gasPrice: EtherAmount.inWei(BigInt.from(10000000000))),
+            contract: contract,
+            function: function,
+            parameters: [],
+            maxGas: config.maxGas,
+            gasPrice: EtherAmount.inWei(BigInt.from(config.gasPriceInWei))),
         fetchChainIdFromNetworkId: true);
     return transactionHash;
   }

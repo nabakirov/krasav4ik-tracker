@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:krasav4ik/blocs/blocs.dart';
 import 'package:web3dart/web3dart.dart';
 import './bloc.dart';
+import 'package:krasav4ik/configs.dart' as config;
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Web3Client web3client;
@@ -13,6 +14,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   ContractFunction contractChangeNickname;
   ContractFunction contractSetInitialValue;
   EthereumAddress address;
+  StreamSubscription _transactionInfo;
 
   NotificationBloc notificationBloc;
 
@@ -44,9 +46,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             Transaction.callContract(
                 contract: contract,
                 function: contractChangeNickname,
-                parameters: [event.nickname]),
+                parameters: [event.nickname],
+                gasPrice: EtherAmount.inWei(BigInt.from(config.gasPriceInWei)),
+                maxGas: config.maxGas),
             fetchChainIdFromNetworkId: true);
         notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+        _waitTransactionInfo(txnHash);
       } catch (_) {
         notificationBloc.dispatch(NewError('something went wrong'));
       }
@@ -63,10 +68,27 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           Transaction.callContract(
               contract: contract,
               function: contractSetInitialValue,
-              parameters: [address, event.points, event.totalAchieves]),
+              parameters: [address, event.points, event.totalAchieves],
+              gasPrice: EtherAmount.inWei(BigInt.from(config.gasPriceInWei)),
+              maxGas: config.maxGas),
           fetchChainIdFromNetworkId: true);
       notificationBloc.dispatch(ShowTransactionHash(txnHash: txnHash));
+      _waitTransactionInfo(txnHash);
       yield BaseSettingsState();
     }
+  }
+
+  void _waitTransactionInfo(String txnHash) {
+    _transactionInfo =
+        Stream.periodic(Duration(seconds: 5)).listen((dynamic) async {
+      TransactionReceipt response =
+          await web3client.getTransactionReceipt(txnHash);
+      print('getTransactionReceipt of $txnHash = $response');
+      if (response != null) {
+        notificationBloc.dispatch(ShowTransactionInfo(
+            transactionReceipt: response,
+            postAction: () => _transactionInfo?.cancel()));
+      }
+    });
   }
 }
