@@ -19,7 +19,7 @@ String getShortenAddress({String address, int count: 7}) {
 
 Widget link({@required Widget child, @required String url}) {
     return InkWell(
-      onTap: () => launch(url, forceWebView: true),
+      onTap: () => launch(url),
       child: child,
     );
   }
